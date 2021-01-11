@@ -1,0 +1,12 @@
+{
+  "order": [
+    "type_declarations",
+    "type_refinement",
+    "tools",
+    "javascript",
+    "dom",
+    "imports_and_exports",
+    "events",
+    "equality"
+  ]
+}

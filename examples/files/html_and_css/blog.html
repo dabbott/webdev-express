@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Blog</title>
+    <style>
+      body,
+      h1,
+      h2 {
+        margin: 0;
+      }
+
+      body {
+        font-family: sans-serif;
+        background-color: rgb(243, 238, 255);
+        color: rgb(26, 1, 114);
+      }
+
+      main,
+      header,
+      footer {
+        padding: 40px 120px;
+      }
+
+      /* Reduce the padding on small screens */
+      @media (max-width: 500px) {
+        main,
+        header,
+        footer {
+          padding: 40px;
+        }
+      }
+
+      header,
+      footer {
+        background-color: aliceblue;
+      }
+
+      footer {
+        text-align: center;
+      }
+
+      section {
+        background-color: white;
+        padding: 40px;
+        margin-bottom: 40px;
+      }
+
+      .last-section {
+        margin-bottom: 0;
+      }
+
+      h2 {
+        margin: 0 0 20px 0;
+      }
+
+      img {
+        width: 300px;
+        height: 200px;
+        max-width: 100%;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome to my blog!</h1>
+    </header>
+    <main>
+      <section>
+        <h2>My latest article</h2>
+        <p>
+          This is my latest article. Here is some <strong>bolded</strong> text
+          and some <em>italic</em> text.
+        </p>
+        <p>
+          Here we have a random photo from
+          <a href="https://picsum.photos">Picsum Photos</a>.
+        </p>
+        <img
+          alt="Randomized photo from Picsum Photos"
+          src="https://picsum.photos/300/200"
+        />
+      </section>
+      <section class="last-section">
+        <h2>My first article</h2>
+        <p>This is my first article.</p>
+      </section>
+    </main>
+    <footer>
+      &copy; 2020 Me
+    </footer>
+  </body>
+</html>

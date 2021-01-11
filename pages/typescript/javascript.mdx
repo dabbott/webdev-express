@@ -1,0 +1,28 @@
+---
+title: JavaScript
+---
+
+<Example
+  title="Script tag"
+  preset="html"
+  reloadMode="hard"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>
+    <button>Change background!</button>
+  </body>
+  <script>
+    const button = document.querySelector('button')\n
+    button.onclick = () => {
+      document.body.style.backgroundColor = 'dodgerblue'
+    }
+  </script>
+</html>`,
+  }}
+/>

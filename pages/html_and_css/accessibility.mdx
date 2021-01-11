@@ -1,0 +1,78 @@
+## WAI
+
+https://www.w3.org/WAI/standards-guidelines/aria/
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques
+
+## Semantic HTML
+
+### Example: Images
+
+<Example
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Title</title>
+    <style>
+      #dog {
+        display: inline-block;
+        width: 200px;
+        height: 150px;
+        background-image: url("https://picsum.photos/id/237/200/150");
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <img alt="dog" src="https://picsum.photos/id/237/200/150">
+    </div>
+    <div>
+      <!-- Lose ability to right click, etc -->
+      <span id="dog" role="img" aria-label="dog" />
+    </div>
+  </body>
+</html>`,
+  }}
+/>
+
+### Example: Links and buttons
+
+<Example
+  preset="html"
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Title</title>
+  </head>
+  <body>
+    <div>
+      Anchor: <a href="https://www.wikipedia.com">Wikipedia</a>
+    </div>
+    <div>
+      <!-- Lose ability to command click, right click, etc -->
+      Button: <button>Wikipedia</button>
+    </div>
+    <div>
+      <!-- Lose abililty to focus -->
+      Span: <span>Wikipedia</span>
+    </div>
+    <script>
+      document.querySelectorAll('button, span').forEach(element => {
+        element.onclick = () => {
+          location.href = 'https://www.wikipedia.com'
+        }
+      })
+    </script>
+  </body>
+</html>`,
+  }}
+/>
+
+## Roles
+
+## Keyboard Navigation
+
+`tabindex`

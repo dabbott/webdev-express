@@ -1,0 +1,73 @@
+---
+title: TypeScript
+---
+
+## Web browsers run JavaScript
+
+JavaScript is the only language that web browsers can run natively.
+
+JavaScript is weakly-typed, so the following code is valid:
+
+<Example
+  title="JavaScript"
+  preset="javascript"
+  width={0}
+  code={`// Declare a variable \`foo\` equal to a number
+let foo = 42\n
+// Assign a string to the same variable
+foo = "Hello, world!"`}
+/>
+
+## TypeScript to the rescue
+
+TypeScript is a superset of JavaScript that supports type annotations.
+
+The above code is no longer valid:
+
+<Example
+  title="TypeScript"
+  preset="typescript"
+  width={0}
+  code={`// TypeScript infers the type of \`foo\` to be \`number\`
+let foo = 42\n
+// ...and prevents us from assigning a string!
+foo = "Hello, world!"`}
+/>
+
+## How TypeScript works
+
+Type annotations are stripped out during a build step.
+
+Because of this, there may be no way to tell the type of your variables at runtime. E.g. in the example below, there's no way to tell that the `rect` object is a `Rectangle` at runtime, since `Rectangle` doesn't exist in the compiled code.
+
+<Example
+  title="TypeScript"
+  preset="typescript"
+  panes={[
+    'editor',
+    { type: 'transpiler', title: 'Compiled JavaScript' },
+    'player',
+  ]}
+  width={0}
+  code={`let foo: number = 42\n
+type Rectangle = {
+  width: number
+  height: number
+}\n
+let rect: Rectangle = { 
+  width: 0, 
+  height: 0
+}`}
+/>
+
+TODO: Mention sourcemaps
+
+## Comparisons with other languages
+
+- **Swift**: https://dabbott.github.io/webdev-projects/cheatsheets/swift-typescript.html
+
+> Go through cheatsheet up to anonymous functions
+
+## TypeScript Playground
+
+You can play with TypeScript in the playground on the TypeScript docs here: https://www.typescriptlang.org/play

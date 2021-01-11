@@ -1,0 +1,14 @@
+- Big difference from Swift: TypeScript does a lot of type refinement automatically
+- Can be confusing at first, types in VSCode might not be what you expect
+
+<Example
+  preset="typescript"
+  code={`let foo: number | string = JSON.parse('42')
+if (typeof foo === 'number') {
+  foo
+} else if (foo === 'pizza') {
+  foo
+} else {
+  foo
+}`}
+/>

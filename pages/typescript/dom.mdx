@@ -1,0 +1,29 @@
+---
+title: DOM
+---
+
+The DOM or "Document Object Model" is an in-memory representation of an HTML page.
+
+We can use TypeScript to read and modify the UI of a webpage using the DOM.
+
+<Example
+  title="Setting a style"
+  height={300}
+  reloadMode="hard"
+  preset="typescript"
+  panes={['editor', 'player']}
+  code={`document.body.style.backgroundColor = 'teal'`}
+/>
+
+## Creating elements
+
+<Example
+  title="Creating an element"
+  height={300}
+  reloadMode="hard"
+  preset="typescript"
+  panes={['editor', 'player']}
+  code={`let d = document.createElement('div')
+d.innerText = "Hello"
+document.body.append(d)`}
+/>

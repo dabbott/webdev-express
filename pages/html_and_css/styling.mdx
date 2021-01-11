@@ -1,0 +1,139 @@
+## CSS
+
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      body {
+        background-color: #3f51b5;
+        color: white;
+      }
+      p {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Welcome!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+## Syntax
+
+A CSS **stylesheet** may contain any number of rules. Each rule has the following syntax:
+
+<SyntaxDiagram
+  tokens={[
+    {
+      id: 'Rule',
+      value: [
+        {
+          id: 'Selector',
+          style: { color: '#2e9f74' },
+          value: ['body'],
+        },
+        ' {\n  ',
+        {
+          id: 'Declaration1',
+          label: 'Declaration',
+          value: [
+            { id: 'Property1', label: 'Property', value: ['background-color'] },
+            ': ',
+            {
+              editable: true,
+              id: 'Value1',
+              label: 'Value',
+              value: ['#abc'],
+              style: { color: '#c92c2c' },
+            },
+            ';',
+          ],
+        },
+        '\n  ',
+        {
+          id: 'Declaration2',
+          label: 'Declaration',
+          value: [
+            { id: 'Property2', label: 'Property', value: ['color'] },
+            ': ',
+            {
+              id: 'Value2',
+              label: 'Value',
+              value: ['white'],
+              style: { color: '#c92c2c' },
+            },
+            ';',
+          ],
+        },
+        '\n',
+        '}',
+      ],
+    },
+  ]}
+/>
+
+## Where to put styles
+
+Embedded, external, inline. So far, we've seen embedded.
+
+With both embedded and external styles, all rules are **global**!
+
+### External styles
+
+Can be reused between HTML files.
+
+### Inline styles
+
+Useful for prototyping and for passing variables to CSS. Hard to maintain.
+
+## Selectors
+
+The 3 most common: Tag, id, and class.
+
+<Example
+  title="Tag, id, and class selectors"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      p {
+        color: red;
+      }
+      .my-paragraph {
+        color: blue;
+      }
+      #my-example {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="my-example" class="my-paragraph">Welcome!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+## Cascading
+
+Refers to the precedence of rules when multiple rules target the same element.
+
+## Specificity
+
+## Targeting multiple elements
+
+Comma-separated selectors

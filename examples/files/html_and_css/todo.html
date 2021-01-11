@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO List</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body,
+      h1,
+      label,
+      form,
+      ul,
+      li,
+      hr {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        color: #333;
+      }
+
+      h1 {
+        margin: 20px 0;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        background-color: #eee;
+        border: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      ul {
+        list-style: none;
+        margin: 10px 0;
+        border-top: 1px solid #ddd;
+        background: lightyellow;
+      }
+
+      li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        user-select: none;
+        cursor: pointer;
+      }
+
+      hr {
+        height: 1px;
+        border: none;
+        background: #ddd;
+        margin: 10px 0;
+      }
+
+      label {
+        margin-right: 10px;
+      }
+
+      button {
+        border: 1px solid #ddd;
+        padding: 8px;
+        background: #eee;
+      }
+
+      select {
+        border: none;
+        border: 1px solid #ddd;
+        padding: 2px;
+        background: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>todos</h1>
+    <form>
+      <input
+        aria-label="Type a task to add to the list"
+        name="input"
+        type="text"
+        placeholder="What needs to be done?"
+        value=""
+      />
+    </form>
+    <hr />
+    <div>
+      <label for="filter">Filter</label>
+      <select id="filter">
+        <option value="all">All</option>
+        <option value="completed">Completed</option>
+        <option value="uncompleted">Uncompleted</option>
+      </select>
+    </div>
+    <ul>
+      <li>Task A</li>
+      <li>Task B</li>
+      <li>Task C</li>
+    </ul>
+    <button disabled>Remove completed items</button>
+  </body>
+</html>

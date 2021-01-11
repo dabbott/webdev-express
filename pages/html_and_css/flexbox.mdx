@@ -1,0 +1,52 @@
+## Rules
+
+<Example
+  preset="html"
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Title</title>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      .outer {
+        height: 100vh;
+        display: flex;
+        flex-direction: row;
+        /* justify-content: center; */
+        /* align-items: flex-start; */
+        /* flex-wrap: wrap; */
+      }
+      .inner {
+        /* align-self: flex-end */
+        /* flex: 1; */
+        padding: 40px;
+        margin: 10px;
+        font-size: 28px;
+        color: white;
+        background-color: dodgerblue;
+      }
+      .a {
+        flex: 2;
+        /* flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0; */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer">
+      <!-- Using multiple classes -->
+      <div class="inner a">A</div>
+      <div class="inner b">B</div>
+      <div class="inner c">C</div>
+    </div>
+  </body>
+</html>`,
+  }}
+/>
+
+iOS developer cheatsheet: https://dabbott.github.io/webdev-projects/cheatsheets/uistackview-flexbox.html

@@ -1,0 +1,48 @@
+---
+title: HTML & CSS
+---
+
+## Overview
+
+HTML code describes the UI of a webpage. Here's an example HTML file with a live preview:
+
+<Example
+  title="First HTML page"
+  preset="html"
+  height={340}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>
+    <p>Welcome!</p>
+    <button>This is a button</button>
+  </body>
+</html>`,
+  }}
+/>
+
+HTML includes a large set of built-in UI elements, such as `<p>` (paragraph) and `<button>`. We typically customize these by embedding other kinds of code in our HTML: CSS code lets us add custom styles, and JavaScript code lets us add interactivity.
+
+> If you're familiar with XML, then HTML should feel very similar, although it has some unusual special cases.
+
+## Document type
+
+Every HTML file should start with a **document type declaration**, or DOCTYPE for short. The DOCTYPE specifies which _version_ of the HTML language the file uses. The browser looks at this to decide how to parse the rest of the HTML and render the page.
+
+Most HTML features are backwards compatible, but some aren't, so it's important to specify this so that your page renders correctly now and in the future.
+
+## Head
+
+The `<head>` element contains _metadata_ about the page. Elements in the head don't actually show up in the UI, but instead inform the browser how to render the page.
+
+The head may also include references to other resources that the browser should download in order to display the page, such as CSS and JavaScript code.
+
+At minimum, the `<head>` should contain a `<title>` element, which will set the title of the browser window for that page.
+
+## Body
+
+The `<body>` contains a hierarchy of UI elements that the browser renders. In the next section, we'll look at a variety of these elements in more depth.

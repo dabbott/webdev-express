@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @import url('http://fonts.cdnfonts.com/css/gordita');
+
+      * {
+        box-sizing: border-box;
+      }
+
+      /* Reset */
+      body,
+      ul,
+      ol,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      label,
+      blockquote {
+        padding: 0;
+        margin: 0;
+        border: 0;
+      }
+
+      html {
+        background-color: #222;
+        font-size: 62.5%;
+      }
+
+      body {
+        color: rgb(255, 247, 247);
+        font-family: 'Gordita';
+        font-size: 1.8rem;
+      }
+
+      h1 {
+        font-size: 6.4rem;
+        font-weight: 400;
+        margin-bottom: 24px;
+      }
+
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 128px 96px;
+      }
+
+      .container {
+        display: flex;
+      }
+
+      /* @media (max-width: 600px) {
+        .container {
+          flex-direction: column;
+        }
+      } */
+
+      .left-container {
+        flex: 0 0 200px;
+        margin-top: 116px;
+      }
+
+      .right-container {
+        flex: 1;
+      }
+
+      .navigation-items {
+        display: flex;
+        flex-direction: column;
+        list-style-type: none;
+      }
+
+      .navigation-list-item {
+        margin-bottom: 1rem;
+        margin-right: 1rem;
+      }
+
+      a {
+        color: white;
+      }
+
+      section {
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+
+      #devin-image {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        object-fit: cover;
+        float: right;
+        border: 2px solid white;
+        margin-left: 40px;
+        margin-bottom: 40px;
+      }
+
+      ul {
+        list-style-position: inside;
+      }
+
+      ul > li {
+        margin-bottom: 1rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.5);
+      }
+
+      .form-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .form-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-row > label {
+        flex: 0 0 100px;
+        display: inline-block;
+        text-align: right;
+        margin-right: 20px;
+      }
+
+      .form-row > input,
+      .form-row > select {
+        padding: 0.8rem;
+        border: none;
+        font-size: 1.8rem;
+        background-color: #444;
+        border: 1px solid #aaa;
+        border-radius: 2px;
+        color: white;
+        min-width: 0;
+      }
+
+      .form-row > select > option {
+        background-color: #444;
+      }
+
+      .form-row > input,
+      .form-row > select {
+        flex: 1 1 0%;
+      }
+
+      .form-row > select {
+        padding-right: 20px;
+      }
+
+      .form-row > input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .submit-form-row {
+        justify-content: flex-end;
+      }
+
+      .youtube-embed {
+        width: 100%;
+        height: 500px;
+      }
+
+      :root {
+        --color-magenta: #ff4daf;
+        --color-violet: #ba8ef2;
+        --color-teal: #5dd1c6;
+        --color-aqua: #46c6ff;
+      }
+
+      .magenta {
+        color: var(--color-magenta);
+      }
+      .violet {
+        color: var(--color-violet);
+      }
+      .teal {
+        color: var(--color-teal);
+      }
+      .aqua {
+        color: var(--color-aqua);
+      }
+
+      button {
+        background-color: var(--color-violet);
+        padding: 1.2rem 2.4rem;
+        border: none;
+        font-size: 1.8rem;
+        border: 1px solid white;
+        border-radius: 2px;
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 1px 4px black;
+        transition: 0.5s;
+      }
+
+      button:hover {
+        background-color: #a071dd;
+        border-color: transparent;
+      }
+
+      button:active {
+        background-color: #6b38ad;
+        border-color: transparent;
+      }
+
+      blockquote {
+        margin: 20px;
+        font-style: italic;
+      }
+
+      blockquote::before {
+        content: '';
+        font-style: normal;
+        display: inline-block;
+        width: 48px;
+        height: 48px;
+        border-radius: 4px;
+        background-color: #795548;
+        vertical-align: middle;
+        margin-right: 20px;
+        margin-bottom: 10px;
+        background-image: url(./quotes.png);
+      }
+
+      @media screen and (max-width: 1200px) {
+        main {
+          padding: 64px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        main {
+          padding: 48px;
+        }
+
+        .container {
+          flex-direction: column;
+        }
+
+        .left-container {
+          margin-top: 0;
+          flex: 0 0 80px;
+        }
+
+        .navigation-items {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        #devin-image {
+          width: 150px;
+          height: 150px;
+        }
+
+        h1 {
+          font-size: 48px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        main {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <nav class="left-container">
+          <ul class="navigation-items">
+            <li class="navigation-list-item">
+              <a href="#about" class="magenta">About</a>
+            </li>
+            <li class="navigation-list-item">
+              <a href="#projects" class="violet">Projects</a>
+            </li>
+            <li class="navigation-list-item">
+              <a href="#videos" class="teal">Videos</a>
+            </li>
+            <li class="navigation-list-item">
+              <a href="#contact" class="aqua">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="right-container">
+          <h1>Welcome</h1>
+          <section>
+            <img
+              id="devin-image"
+              src="./devin.jpg"
+              alt="Devin in front of shrubbery"
+            />
+            <h2 id="about" class="magenta">About</h2>
+            <p>
+              My name is Devin Abbott, and I'm a web & mobile app developer.
+            </p>
+            <p>
+              I primarily work with <strong>React</strong> and
+              <strong>React Native</strong>. Sometimes I write
+              <strong>Swift</strong> — but mainly for macOS, not iOS. Many of my
+              projects are open source.
+            </p>
+            <blockquote>Open source is fun, sometimes.</blockquote>
+          </section>
+          <section>
+            <h2 id="projects" class="violet">Projects</h2>
+            <p>Here are a few open source projects I've worked on:</p>
+            <ul>
+              <li><a href="https://react.express">React Express</a></li>
+              <!-- prettier-ignore -->
+              <li><a href="https://reactnative.express">React Native Express</a></li>
+              <li><a href="https://javascript.express">JavaScript</a></li>
+              <li><a href="https://typescript.express">TypeScript</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2 id="videos" class="teal">Videos</h2>
+            <p>Sometimes I talk at conferences.</p>
+            <p>Here's a talk I gave at React Europe in 2017:</p>
+            <iframe
+              class="youtube-embed"
+              src="https://www.youtube.com/embed/HVwLOcllTfI"
+            ></iframe>
+          </section>
+          <section>
+            <h2 id="contact" class="aqua">Contact</h2>
+            <p>Want to say hi?</p>
+            <form
+              method="POST"
+              action="https://echo-form-body-u6ozq7lkydx0.runkit.sh/"
+            >
+              <div class="form-row">
+                <label for="name">Name</label
+                ><input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Your name"
+                />
+              </div>
+              <div class="form-row">
+                <label for="email">Email</label
+                ><input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Your email address"
+                />
+              </div>
+              <div class="form-row">
+                <label for="email">Subject</label
+                ><select name="subject">
+                  <option value="oss">Open source projects</option>
+                  <option value="training">Training sessions</option>
+                  <option value="hello">Just saying hello</option>
+                </select>
+              </div>
+              <div class="form-row submit-form-row">
+                <button>Submit</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,285 @@
+## Element Syntax
+
+HTML describes a hierarchy of **elements** that make up a webpage. Each element can be configured using **attributes**, and may contain nested **content** (text or other elements) within.
+
+### Regular elements
+
+Suppose we wanted to use the `main` element, and set its `class` attribute to the value `"my-content"`. Here's how we would write it:
+
+<SyntaxDiagram
+  tokens={[
+    {
+      id: 'Element',
+      value: [
+        {
+          id: 'Opening tag',
+          value: [
+            '<',
+            {
+              id: 'tag1',
+              label: 'Tag name',
+              value: ['main'],
+              style: { color: '#2e9f74' },
+            },
+            ' ',
+            {
+              id: 'Attribute',
+              value: [
+                {
+                  id: 'Attribute name',
+                  value: ['class'],
+                },
+                '=',
+                {
+                  id: 'Attribute value',
+                  value: ['"my-content"'],
+                  style: { color: '#2e9f74' },
+                },
+              ],
+            },
+            '>',
+          ],
+        },
+        //'\n',
+        { id: 'Content', value: ['Hello, world!'] },
+        //'\n',
+        {
+          id: 'Closing tag',
+          value: [
+            '</',
+            {
+              id: 'tag2',
+              label: 'Tag name',
+              style: { color: '#2e9f74' },
+              value: ['main'],
+            },
+            '>',
+          ],
+        },
+      ],
+    },
+  ]}
+/>
+
+> Hover or tap to highlight the different parts of the diagram above.
+
+### Void elements
+
+Some elements must not contain any content - these are called **void elements**. In this case, a closing tag is not allowed. The opening tag may end in either `>`, or `/>` like XML.
+
+<SyntaxDiagram
+  tokens={[
+    {
+      id: 'Element',
+      value: [
+        {
+          id: 'Opening tag',
+          value: [
+            '<',
+            {
+              id: 'tag1',
+              label: 'Tag name',
+              value: ['img'],
+              style: { color: '#2e9f74' },
+            },
+            ' ',
+            {
+              id: 'Attribute',
+              value: [
+                {
+                  id: 'Attribute name',
+                  value: ['src'],
+                },
+                '=',
+                {
+                  id: 'Attribute value',
+                  value: ['"https://placehold.it/100x100"'],
+                  style: { color: '#2e9f74' },
+                },
+              ],
+            },
+            '>',
+          ],
+        },
+      ],
+    },
+  ]}
+/>
+
+> An up-to-date list of all void elements can be found here: https://github.com/wooorm/html-void-elements
+
+<!-- ## Comments -->
+
+### Entity references
+
+The characters `<`, `>`,`"`,`'` and `&` are reserved, since they're used by the HTML syntax to define elements and attributes. We can use special escape sequences starting with `&` to insert these as text within an element's content.
+
+For example, if we want to write a `<` character, we could use the following HTML:
+
+<Example
+  title="Entity reference"
+  preset="html"
+  height={340}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>
+    <p>A less-than symbol: &lt;</p>
+  </body>
+</html>`,
+  }}
+/>
+
+Here are the characters we _have to_ use entity references to write.
+
+| Character | Entity reference |
+| --------- | ---------------- |
+| `<`       | `&lt;`           |
+| `>`       | `&gt;`           |
+| `"`       | `&quot;`         |
+| `'`       | `&apos;`         |
+| `&`       | `&amp;`          |
+
+There are many other entity references that exist mainly for historic reasons: UTF-8 wasn't always widely supported, so there had to be a way to represent other characters within ASCII.
+
+## `<head>` elements
+
+The following are a few of the most common elements used in the `head` of a document.
+
+### `style`
+
+We can use a `style` element to style our page with CSS:
+
+<Example
+  title="Style tag"
+  preset="html"
+  height={400}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      body {
+        background-color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    Hello, world!
+  </body>
+</html>`,
+  }}
+/>
+
+### `link`
+
+We can also link to external CSS files using the `link` element, e.g.: `<link rel="stylesheet" href="styles.css">`.
+
+> Note that `link` is a void element, so we must _not_ include a closing tag.
+
+### `script`
+
+Script elements let us run JavaScript to add interactivity to our page.
+
+<Example
+  title="Style element"
+  preset="html"
+  height={440}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <script>
+      window.onload = () => {
+        document.body.onclick = () => {
+          alert('Clicked!')
+        }
+      }
+    </script>
+  </head>
+  <body>
+    Click me!
+  </body>
+</html>`,
+  }}
+/>
+
+We can link to external JavaScript files using the `src` attribute of a `script` element, e.g. `<script src="./main.js"></script>`.
+
+> The `script` tag is _not_ a void element, so we _must_ include a closing tag.
+
+Script tags may also be used in the `body`, and that the location of the script tag _does matter_. A script in the `head` will run before the `body` is constructed and the UI is presented to the user - so some parts of the document may not be accessible via JavaScript yet.
+
+## `<body>` elements
+
+Now, let's look at some of the most common `body` elements.
+
+### Block vs. inline
+
+Most elements are either **block** or **inline** elements. Block elements are rendered on their own line, while inline elements render on the same line, so long as they fit within their parent element (think a paragraph with word-wrapping).
+
+The most general-purpose block element is the `div` and the most general-purpose inline element is the `span`.
+
+<Example
+  title="Block vs. inline"
+  preset="html"
+  height={440}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>
+    <div>Block</div>
+    <div>Block</div>
+    <div>Block</div>
+    <span>Inline</span>
+    <span>Inline</span>
+    <span>Inline</span>
+    <div>Block</div>
+  </body>
+</html>`,
+  }}
+/>
+
+Note that block elements cannot be nested inside inline elements.
+
+We can change an element from block to inline or vice versa using the CSS declaration `display: block` or `display: inline`.
+
+> Technically, as of HTML5, elements are now grouped into [content categories](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories) rather than "block" or "inline", which are purely presentational. However, most developers still refer to elements as "block" or "inline", and the mental model is essentially the same.
+
+> Here's a complete list of [block elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements#elements) and [inline elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Inline_elements#list_of_inline_elements)
+
+### Semantic HTML
+
+The elements `div` and `span` do not have any semantic meaning or built-in styles. However, many elements do, and we should try to use these whenever possible.
+
+Here are a handful of common elements:
+
+- Sections: `main`, `nav`, `header`, `footer`, `section`
+- Headings: `h1`, `h2`, `h3`, `h4`, `h5`, `h6`
+- Inline styles: `strong`, `em`
+- Navigation: `a`
+- Embedded content: `img`, `video`, `svg`, `audio`
+- Lists: `ul`, `ol`, `li`
+- Forms: `form`, `label`, `input`, `select`, `option`, `textarea`, `button`
+
+Although we could make many webpages using just `div` and `span` elements, we should try to use semantic elements - semantic elements often come with built-in styles or behaviors that users expect, and assistive technologies like screenreaders use them to navigate the page.
+
+## Validating HTML
+
+Browsers almost never throw errors, however, it's still a good idea to write valid HTML so that all browsers display your page the same way.
+
+You can check that your HTML is valid here: https://validator.w3.org/#validate_by_input (or programatically here: https://validator.w3.org/docs/api.html)
+
+Your text editor will usually guide you in the right direction through autocomplete.

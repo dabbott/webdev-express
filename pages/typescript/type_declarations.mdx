@@ -1,0 +1,140 @@
+## `type` keyword
+
+Most types are declared with the `type` keyword.
+
+Unlike most languages, _literal values_ can be used as types.
+
+<Example
+  title="Declaring types"
+  preset="typescript"
+  panes={['editor']}
+  code={`type A = number\n
+type B = 42\n
+// primitive types are lowercase - uppercase is something else (rarely what you want)
+type C = Number`}
+/>
+
+## Type inference
+
+Variables are declared with `let`, and constants are declared with `const`. Note that the inferred types are different.
+
+<Example
+  title="Type inference"
+  preset="typescript"
+  panes={['editor']}
+  code={`let a = 42\n
+const b = 42`}
+/>
+
+## Object types
+
+Objects are used both like like _dictionaries_, with arbitrary fields but values of the same type, and like _structs_, with named fields and values of different types.
+
+Note that this distinction only exists at compile-time. At run-time, all objects are dictionary-like, supporting arbitrary fields and values.
+
+### "Dictionary-like" objects
+
+<Example
+  title="Dictionary-like objects"
+  preset="typescript"
+  width={0}
+  code={`type MyObject = { [key: string]: string }\n
+let myObject: MyObject = {
+  foo: 'hi'
+}\n
+myObject.bar = 'ok'\n
+console.log(myObject)`}
+/>
+
+### "Struct-like" objects
+
+These objects have a set of defined property names and values.
+
+Note that type declarations look _a lot_ like literal values, and it's common to accidentally confuse types and values.
+
+<Example
+  title="Struct-like objects"
+  preset="typescript"
+  width={0}
+  code={`type MyObject = {
+  foo: number
+  bar: string
+}\n
+let myObject: MyObject = {
+  foo: 123,
+  bar: "hi",
+}\n
+console.log(myObject)`}
+/>
+
+## Classes
+
+These are about the same as Swift, syntax and semantics
+
+## Interfaces
+
+These are about the same as protocols
+
+```ts
+interface F {
+  foo: string
+  bar(n: number): number
+}
+```
+
+- Keywords `type` and `interface` are almost interchangeable - https://microsoft.github.io/TypeScript-New-Handbook/everything/#interface-vs-alias
+
+## Unions
+
+```ts
+type U = string | number | 42 | { foo: string } | { baz: 123 }
+
+function doSomething(arg: U) {
+  if (typeof arg === 'string') {
+    arg
+  } else if (typeof arg === 'number') {
+    arg
+  } else if ('foo' in arg) {
+    arg.foo
+  } else {
+    arg.baz
+  }
+}
+
+doSomething('hi')
+```
+
+### There are enums, but unions are typically more common.
+
+- Enums can't have associated data
+- Converting to/from enum is more of a hassle
+
+### Discriminating Unions
+
+```ts
+type U = { type: 'a'; foo: string } | { type: 'b'; baz: 123 }
+
+function doSomething(arg: U) {
+  // TypeScript figures out arg.type is union
+  switch (arg.type) {
+    case 'a':
+      arg
+      break
+    case 'b':
+      arg
+      break
+  }
+}
+
+doSomething({ type: 'a', foo: 'bar' })
+```
+
+## Intersection types
+
+This works both with object types and interfaces
+
+```ts
+type A = { foo: string }
+type B = { bar: number }
+type C = A & B
+```

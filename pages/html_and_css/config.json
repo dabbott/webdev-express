@@ -1,0 +1,14 @@
+{
+  "order": [
+    "elements",
+    "styling",
+    "box_model",
+    "flexbox",
+    "advanced_selectors",
+    "responsive_design",
+    "accessibility",
+    "architecture",
+    "projects",
+    "resources"
+  ]
+}
