@@ -13,7 +13,5 @@ export function parseHashStringParameters(
     return params
   }, {} as Record<string, string>)
 
-  console.log(params)
-
   return params
 }

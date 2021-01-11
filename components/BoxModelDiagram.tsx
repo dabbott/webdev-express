@@ -23,9 +23,138 @@ const Preview = styled.div(({ theme }) => ({
 
 const Box = styled.div<{ value: string }>`
   ${(props) => props.value};
+  pointer-events: none;
 `
 
 export type CSSDeclaration = [string, string]
+
+type BoxSizing = 'border-box' | 'content-box'
+
+type MeasuredBox = {
+  marginTop: number
+  marginRight: number
+  marginBottom: number
+  marginLeft: number
+  paddingTop: number
+  paddingRight: number
+  paddingBottom: number
+  paddingLeft: number
+  borderTopWidth: number
+  borderRightWidth: number
+  borderBottomWidth: number
+  borderLeftWidth: number
+  width: number
+  height: number
+  boxSizing: BoxSizing
+}
+
+type BoxModelComponent = 'margin' | 'padding' | 'border' | 'content'
+
+function MeasuredBoxDiagram({
+  measuredBox,
+  highlight,
+  onHighlight,
+}: {
+  measuredBox: MeasuredBox
+  highlight?: BoxModelComponent
+  onHighlight: (component: BoxModelComponent) => void
+}) {
+  const highlightColors = {
+    margin: highlight === 'margin' ? colors.margin : 'transparent',
+    border:
+      highlight === 'border'
+        ? colors.border
+        : highlight === 'content' && measuredBox.boxSizing === 'border-box'
+        ? colors.content
+        : 'transparent',
+    padding:
+      highlight === 'padding'
+        ? colors.padding
+        : highlight === 'content' && measuredBox.boxSizing === 'border-box'
+        ? colors.content
+        : 'transparent',
+    content: highlight === 'content' ? colors.content : 'transparent',
+  }
+
+  const marginStyle: CSSProperties = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    opacity: 0.7,
+    width: 'fit-content',
+    borderTop: `${measuredBox.marginTop}px solid ${highlightColors.margin}`,
+    borderRight: `${measuredBox.marginRight}px solid ${highlightColors.margin}`,
+    borderBottom: `${measuredBox.marginBottom}px solid ${highlightColors.margin}`,
+    borderLeft: `${measuredBox.marginLeft}px solid ${highlightColors.margin}`,
+  }
+
+  const borderStyle: CSSProperties = {
+    width: 'fit-content',
+    borderTop: `${measuredBox.borderTopWidth}px solid ${highlightColors.border}`,
+    borderRight: `${measuredBox.borderRightWidth}px solid ${highlightColors.border}`,
+    borderBottom: `${measuredBox.borderBottomWidth}px solid ${highlightColors.border}`,
+    borderLeft: `${measuredBox.borderLeftWidth}px solid ${highlightColors.border}`,
+  }
+
+  const paddingStyle: CSSProperties = {
+    width: 'fit-content',
+    borderTop: `${measuredBox.paddingTop}px solid ${highlightColors.padding}`,
+    borderRight: `${measuredBox.paddingRight}px solid ${highlightColors.padding}`,
+    borderBottom: `${measuredBox.paddingBottom}px solid ${highlightColors.padding}`,
+    borderLeft: `${measuredBox.paddingLeft}px solid ${highlightColors.padding}`,
+  }
+
+  const contentStyle: CSSProperties = {
+    width:
+      measuredBox.boxSizing === 'content-box'
+        ? `${measuredBox.width}px`
+        : `${
+            measuredBox.width -
+            (measuredBox.paddingLeft +
+              measuredBox.paddingRight +
+              measuredBox.borderLeftWidth +
+              measuredBox.borderRightWidth)
+          }px`,
+    height:
+      measuredBox.boxSizing === 'content-box'
+        ? `${measuredBox.height}px`
+        : `${
+            measuredBox.height -
+            (measuredBox.paddingTop +
+              measuredBox.paddingBottom +
+              measuredBox.borderTopWidth +
+              measuredBox.borderBottomWidth)
+          }px`,
+    background: highlightColors.content,
+  }
+
+  function handleHighlight(
+    component: BoxModelComponent,
+    event: React.MouseEvent<HTMLDivElement>
+  ) {
+    event.stopPropagation()
+    onHighlight(component)
+  }
+
+  return (
+    <div style={marginStyle} onMouseMove={handleHighlight.bind(null, 'margin')}>
+      <div
+        style={borderStyle}
+        onMouseMove={handleHighlight.bind(null, 'border')}
+      >
+        <div
+          style={paddingStyle}
+          onMouseMove={handleHighlight.bind(null, 'padding')}
+        >
+          <div
+            style={contentStyle}
+            onMouseMove={handleHighlight.bind(null, 'content')}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 interface Props {
   declarations: CSSDeclaration[]
@@ -72,17 +201,11 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
   const [selectedId, setSelectedId] = useState<string | undefined>()
   const [css, setCss] = useState('')
   const targetRef = useRef<HTMLDivElement | null>(null)
-  const [highlight, setHighlight] = useState<
-    'margin' | 'padding' | 'border' | 'content' | undefined
-  >(undefined)
+  const [highlight, setHighlight] = useState<BoxModelComponent | undefined>(
+    undefined
+  )
 
   const boxSizing = css.includes('border-box') ? 'border-box' : 'content-box'
-  const highlightBorder =
-    highlight === 'border' ||
-    (highlight === 'content' && boxSizing === 'border-box')
-  const highlightPadding =
-    highlight === 'padding' ||
-    (highlight === 'content' && boxSizing === 'border-box')
 
   useEffect(() => {
     const target = targetRef.current
@@ -92,7 +215,35 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
     target.setAttribute('style', css)
   }, [css])
 
-  const contentRef = useRef<HTMLDivElement | null>(null)
+  const boxRef = useRef<HTMLDivElement | null>(null)
+  const [measuredBox, setMeasuredBox] = useState<MeasuredBox | undefined>()
+
+  useEffect(() => {
+    if (!boxRef.current) return
+
+    const style = window.getComputedStyle(boxRef.current)
+
+    const measured: MeasuredBox = {
+      marginTop: parseFloat(style.marginTop),
+      marginRight: parseFloat(style.marginRight),
+      marginBottom: parseFloat(style.marginBottom),
+      marginLeft: parseFloat(style.marginLeft),
+      borderTopWidth: parseFloat(style.borderTopWidth),
+      borderRightWidth: parseFloat(style.borderRightWidth),
+      borderBottomWidth: parseFloat(style.borderBottomWidth),
+      borderLeftWidth: parseFloat(style.borderLeftWidth),
+      paddingTop: parseFloat(style.paddingTop),
+      paddingRight: parseFloat(style.paddingRight),
+      paddingBottom: parseFloat(style.paddingBottom),
+      paddingLeft: parseFloat(style.paddingLeft),
+      width: parseFloat(style.width),
+      height: parseFloat(style.height),
+      boxSizing:
+        style.boxSizing === 'border-box' ? 'border-box' : 'content-box',
+    }
+
+    setMeasuredBox(measured)
+  }, [css])
 
   const theme = useTheme()
 
@@ -133,76 +284,18 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
         <div
           style={{
             display: 'flow-root',
-            ...(highlight === 'margin' && { backgroundColor: colors.margin }),
-          }}
-          onMouseMove={(e) => {
-            e.stopPropagation()
-            setHighlight('margin')
-            setSelectedId('margin')
+            position: 'relative',
           }}
         >
-          <Box
-            value={css}
-            style={{
-              position: 'relative',
-              backgroundColor: highlightPadding ? colors.padding : 'white',
-              ...(highlightBorder && {
-                borderColor: colors.border,
-              }),
-              ...(boxSizing === 'border-box' &&
-                highlight === 'content' && {
-                  backgroundColor: colors.content,
-                  borderColor: colors.content,
-                }),
-            }}
-            onMouseMove={(e) => {
-              e.stopPropagation()
-              setHighlight('border')
-              setSelectedId('border')
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                // Hover seems to trigger a little before we actually enter the element
-                top: 2,
-                left: 2,
-                right: 2,
-                bottom: 2,
-              }}
-              onMouseMove={(e) => {
-                e.stopPropagation()
-
-                if (!contentRef.current) return
-
-                const boundingRect = contentRef.current.getBoundingClientRect()
-
-                if (
-                  e.clientX > boundingRect.left &&
-                  e.clientX < boundingRect.right &&
-                  e.clientY > boundingRect.top &&
-                  e.clientY < boundingRect.bottom
-                ) {
-                  setHighlight('content')
-                  setSelectedId('width')
-                } else {
-                  setHighlight('padding')
-                  setSelectedId('padding')
-                }
-              }}
+          {measuredBox && (
+            <MeasuredBoxDiagram
+              highlight={highlight}
+              measuredBox={measuredBox}
+              onHighlight={setHighlight}
             />
-            <div
-              ref={contentRef}
-              style={{
-                backgroundColor: 'white',
-                ...(highlight === 'content' && {
-                  height: '100%',
-                  backgroundColor: colors.content,
-                }),
-              }}
-            >
-              A div with <code style={theme.textStyles.code}>id="my-box"</code>
-            </div>
+          )}
+          <Box ref={boxRef} value={css}>
+            A div with <code style={theme.textStyles.code}>id="my-box"</code>
           </Box>
         </div>
         Some content below
