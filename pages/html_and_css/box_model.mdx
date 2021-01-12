@@ -1,34 +1,110 @@
 ## What is the Box Model?
 
+Every HTML is rendered within a rectangular "box". The box model describes the layout for this box.
+
+## Width and height
+
+The most direct way to specify the size of a box is through the `width` and `height` CSS styles.
+
+We can use hardcoded values, e.g. `300px`, or a variety of other values like percents, e.g. `50%`.
+
+If we don't specify a width/height, these styles default to `auto`. Using `auto` sets the width or height to the "intrinsic content size" of the box (i.e. big enough to fit its content).
+
+<BoxModelDiagram
+  declarations={[
+    ['width', '300px'],
+    ['height', '200px'],
+    ['background-color', '#ddd'],
+  ]}
+/>
+
+## Padding, margin, and border
+
+Each element/box can have a **border**. We can add spacing _outside_ the border with **margin**, or inside the border with **padding**.
+
 <BoxModelDiagram
   declarations={[
     ['margin', '20px'],
     ['border', '4px solid gray'],
     ['padding', '30px'],
-    ['width', 'auto'],
-    ['height', 'auto'],
-    ['box-sizing', 'content-box'],
+    ['background-color', '#ddd'],
   ]}
 />
 
-## Width and height
+### Specifying a different size on each side
 
-Percent width and height.
+We can use separate CSS styles to specify different margins/borders/paddings for each side.
 
-## Padding, margin, and border
+For example:
+
+<BoxModelDiagram
+  declarations={[
+    ['margin-top', '20px'],
+    ['margin-bottom', '20px'],
+    ['border-left', '6px solid gray'],
+    ['padding-left', '10px'],
+    ['background-color', '#ddd'],
+  ]}
+/>
+
+### Shorthand syntax
+
+There's a shorthand syntax for combining different margin and padding sizes in the same line. We can specify up to 4 values, going clockwise from the top: top, right, bottom, and left. If we only specify 2 values, then they will represent: vertical, horizonal.
+
+<BoxModelDiagram
+  declarations={[
+    ['margin', '20px 0 10px 40px'],
+    ['padding', '0 30px'],
+    ['background-color', '#ddd'],
+  ]}
+/>
 
 ## Content box vs. border box
 
+We can use two different algorithms for calculating box dimensions. We specify which algorithm to use via the `box-sizing` style.
+
+The two options are:
+
+- `content-box` - The width/height don't include padding or border width
+- `border-box` - The width/height include padding and border width
+
+<BoxModelDiagram
+  declarations={[
+    ['margin', '20px'],
+    ['border', '4px solid gray'],
+    ['padding', '30px'],
+    ['width', '200px'],
+    ['box-sizing', 'content-box'],
+    ['background-color', '#ddd'],
+  ]}
+/>
+
+> Try changing `content-box` to `border-box` and see what happens!
+
+Generally, `border-box` is a little easier to use, and most developers set it on every element (we can use this CSS to do so: `* { box-sizing: border-box; }`).
+
 ## Position
+
+We can use `position: relative` along with `top/right/bottom/left` to move a box without affect the layout of anything around it.
 
 <BoxModelDiagram
   declarations={[
     ['position', 'relative'],
     ['top', '12px'],
+    ['left', '20px'],
+    ['background-color', '#ddd'],
+  ]}
+/>
+
+We `position: absolute`, on the other hand, removes the box from the regular page layout and sets the position relative to the box's nearest ancestor that also sets a `position`.
+
+<!--BoxModelDiagram
+  declarations={[
+    ['position', 'absolute'],
+    ['top', '12px'],
     ['right', '0'],
     ['bottom', '0'],
     ['left', '0'],
-    ['background-color', '#0CF'],
-    //['color', 'white'],
+    ['background-color', '#ddd'],
   ]}
-/>
+/-->

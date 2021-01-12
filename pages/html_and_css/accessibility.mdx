@@ -1,13 +1,30 @@
-## WAI
+## WAI-ARIA
 
-https://www.w3.org/WAI/standards-guidelines/aria/
+WAI-ARIA (Web Accessibility Initiative – Accessible Rich Internet Applications) is the specification for accessibility standards on the web. For more detail, see: https://www.w3.org/WAI/standards-guidelines/aria/
+
+This standard added a variety of HTML element attributes to help make our websites more accessible. Many of these attributes have the prefix `aria`, such as `aria-label`. For more detail on the available attributes, see:
 https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques
 
 ## Semantic HTML
 
+The best way to make our page accessible is by using "semantic" HTML elements. Instead of using only `div` and `span` elements and styling them with CSS (which is sometimes easier), we should use elements like `img` and `button` where appropriate, and reset their built-in styles as needed.
+
+Semantic elements have built-in behaviors that users already understand, and screenreaders often know how to interpret them without any special `aria` attributes.
+
+## Roles
+
+If we can't use semantic elements for some reason (e.g. we want to design a custom widget, rather than using a built-in one), we should check if there's a built-in `role` we can use. The `role` attribute tells assistive devices what kind of widget an element is, e.g. image, button, checkbox, dropdown, tree, etc.
+
+By providing a `role` and a variety of `aria` attributes, we can usually create something accessible.
+
 ### Example: Images
 
+To display an image, we can use an `img` element, or a `div` with a `background-image` set via CSS.
+
+In some ways, the `div` is more flexible and easier to style. We can even make it accessible to screenreaders by adding a `role` and `aria-label`. However, it will still be missing some default browser behavior (right click to save or open in a new tab).
+
 <Example
+  title="Accessible images"
   preset="html"
   height={520}
   files={{
@@ -17,7 +34,6 @@ https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques
     <title>My Title</title>
     <style>
       #dog {
-        display: inline-block;
         width: 200px;
         height: 150px;
         background-image: url("https://picsum.photos/id/237/200/150");
@@ -26,11 +42,12 @@ https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques
   </head>
   <body>
     <div>
+      Img element (try right clicking):
       <img alt="dog" src="https://picsum.photos/id/237/200/150">
     </div>
     <div>
-      <!-- Lose ability to right click, etc -->
-      <span id="dog" role="img" aria-label="dog" />
+      Div (right click is missing options):
+      <div id="dog" role="img" aria-label="dog" />
     </div>
   </body>
 </html>`,
@@ -40,6 +57,7 @@ https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques
 ### Example: Links and buttons
 
 <Example
+  title="Links and buttons"
   preset="html"
   files={{
     'index.html': `<!DOCTYPE html>
@@ -70,8 +88,6 @@ https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques
 </html>`,
   }}
 />
-
-## Roles
 
 ## Keyboard Navigation
 

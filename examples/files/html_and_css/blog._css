@@ -1,0 +1,56 @@
+body,
+h1,
+h2 {
+  margin: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: rgb(243, 238, 255);
+  color: rgb(26, 1, 114);
+}
+
+main,
+header,
+footer {
+  padding: 40px 120px;
+}
+
+/* Reduce the padding on small screens */
+@media (max-width: 500px) {
+  main,
+  header,
+  footer {
+    padding: 40px;
+  }
+}
+
+header,
+footer {
+  background-color: aliceblue;
+}
+
+footer {
+  text-align: center;
+}
+
+section {
+  background-color: white;
+  padding: 40px;
+  margin-bottom: 40px;
+}
+
+.last-section {
+  margin-bottom: 0;
+}
+
+h2 {
+  margin: 0 0 20px 0;
+}
+
+img {
+  width: 300px;
+  height: 200px;
+  max-width: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+}

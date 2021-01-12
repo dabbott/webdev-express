@@ -1,5 +1,7 @@
+/// <reference types="resize-observer-browser" />
 import React, {
   CSSProperties,
+  RefObject,
   useEffect,
   useMemo,
   useRef,
@@ -22,8 +24,9 @@ const Preview = styled.div(({ theme }) => ({
 }))
 
 const Box = styled.div<{ value: string }>`
-  ${(props) => props.value};
   pointer-events: none;
+  box-sizing: content-box;
+  ${(props) => props.value};
 `
 
 export type CSSDeclaration = [string, string]
@@ -50,6 +53,28 @@ type MeasuredBox = {
 
 type BoxModelComponent = 'margin' | 'padding' | 'border' | 'content'
 
+function useResizeObserver(ref: RefObject<HTMLDivElement>, f: () => void) {
+  useEffect(() => {
+    let mounted = true
+
+    let resizeObserver = new ResizeObserver(() => {
+      f()
+    })
+
+    if (ref.current) {
+      resizeObserver.observe(ref.current)
+    }
+
+    return () => {
+      mounted = false
+
+      if (ref.current) {
+        resizeObserver.unobserve(ref.current)
+      }
+    }
+  }, [])
+}
+
 function MeasuredBoxDiagram({
   measuredBox,
   highlight,
@@ -57,7 +82,7 @@ function MeasuredBoxDiagram({
 }: {
   measuredBox: MeasuredBox
   highlight?: BoxModelComponent
-  onHighlight: (component: BoxModelComponent) => void
+  onHighlight: (component: BoxModelComponent | undefined) => void
 }) {
   const highlightColors = {
     margin: highlight === 'margin' ? colors.margin : 'transparent',
@@ -129,7 +154,7 @@ function MeasuredBoxDiagram({
   }
 
   function handleHighlight(
-    component: BoxModelComponent,
+    component: BoxModelComponent | undefined,
     event: React.MouseEvent<HTMLDivElement>
   ) {
     event.stopPropagation()
@@ -137,7 +162,11 @@ function MeasuredBoxDiagram({
   }
 
   return (
-    <div style={marginStyle} onMouseMove={handleHighlight.bind(null, 'margin')}>
+    <div
+      style={marginStyle}
+      onMouseMove={handleHighlight.bind(null, 'margin')}
+      onMouseLeave={handleHighlight.bind(null, undefined)}
+    >
       <div
         style={borderStyle}
         onMouseMove={handleHighlight.bind(null, 'border')}
@@ -218,7 +247,7 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
   const boxRef = useRef<HTMLDivElement | null>(null)
   const [measuredBox, setMeasuredBox] = useState<MeasuredBox | undefined>()
 
-  useEffect(() => {
+  function updateMeasurements() {
     if (!boxRef.current) return
 
     const style = window.getComputedStyle(boxRef.current)
@@ -243,12 +272,33 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
     }
 
     setMeasuredBox(measured)
+  }
+
+  useEffect(() => {
+    updateMeasurements()
   }, [css])
+
+  useEffect(() => {
+    if (!boxRef.current) return
+
+    let resizeObserver = new ResizeObserver(() => {
+      updateMeasurements()
+    })
+
+    resizeObserver.observe(boxRef.current)
+
+    return () => {
+      if (!boxRef.current) return
+
+      resizeObserver.unobserve(boxRef.current)
+    }
+  }, [])
 
   const theme = useTheme()
 
   return (
     <SyntaxDiagram
+      layoutType={'split'}
       selectedId={selectedId}
       tokens={tokens}
       popOut={
@@ -266,13 +316,13 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
       onChangeActiveToken={(id) => {
         setSelectedId(id)
 
-        if (id?.endsWith('margin')) {
+        if (id?.includes('margin')) {
           setHighlight('margin')
-        } else if (id?.endsWith('padding')) {
+        } else if (id?.includes('padding')) {
           setHighlight('padding')
-        } else if (id?.endsWith('border')) {
+        } else if (id?.includes('border')) {
           setHighlight('border')
-        } else if (id?.endsWith('width') || id?.endsWith('height')) {
+        } else if (id?.includes('width') || id?.includes('height')) {
           setHighlight('content')
         } else {
           setHighlight(undefined)
@@ -291,7 +341,10 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
             <MeasuredBoxDiagram
               highlight={highlight}
               measuredBox={measuredBox}
-              onHighlight={setHighlight}
+              onHighlight={(highlight) => {
+                setHighlight(highlight)
+                setSelectedId(highlight)
+              }}
             />
           )}
           <Box ref={boxRef} value={css}>

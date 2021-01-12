@@ -203,18 +203,23 @@ const Container = styled.div(({ theme }) => ({
   marginBottom: `${theme.sizes.spacing.small}px`,
 }))
 
-const Menu = styled.div(({ theme }) => ({
-  minWidth: '180px',
-  margin: '10px',
-  borderRadius: '8px',
-  background: 'white',
-  padding: `8px ${theme.sizes.spacing.small}px`,
-  // borderLeft: `1px solid ${theme.colors.divider}`,
+const Menu = styled.div<{ layoutType: LayoutType }>(
+  ({ theme, layoutType }) => ({
+    ...(layoutType === 'split' && {
+      width: '50%',
+    }),
+    minWidth: '180px',
+    margin: '10px',
+    borderRadius: '8px',
+    background: 'white',
+    padding: `8px ${theme.sizes.spacing.small}px`,
+    // borderLeft: `1px solid ${theme.colors.divider}`,
 
-  [mediaQuery.small]: {
-    display: 'none',
-  },
-}))
+    [mediaQuery.small]: {
+      display: 'none',
+    },
+  })
+)
 
 const IconContainer = styled.a(({ theme }) => ({
   color: theme.colors.text,
@@ -251,16 +256,20 @@ const MenuRow = styled.div<{ depth: number; active: boolean }>(
   })
 )
 
-const Diagram = styled.div(({ theme }) => ({
-  padding: `40px`,
-  flex: '1 1 auto',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'relative',
-  whiteSpace: 'pre-wrap',
-  cursor: 'crosshair',
-}))
+const Diagram = styled.div<{ layoutType: LayoutType }>(
+  ({ theme, layoutType }) => ({
+    padding: `40px`,
+    flex: '1 1 auto',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: layoutType === 'split' ? 'flex-start' : 'center',
+    position: 'relative',
+    whiteSpace: 'pre-wrap',
+    cursor: 'crosshair',
+  })
+)
+
+type LayoutType = 'main-syntax' | 'split'
 
 interface Props {
   tokens: Token[]
@@ -273,6 +282,7 @@ interface Props {
   children?: ReactNode
   selectedId?: string | undefined
   onChangeSelectedId?: (id: string | undefined) => void
+  layoutType?: LayoutType
 }
 
 export default function SyntaxDiagram(props: Props) {
@@ -289,6 +299,7 @@ export default function SyntaxDiagram(props: Props) {
     onChangeActiveToken = () => {},
     onChangeText = () => {},
     selectedId: externalSelectedId,
+    layoutType = 'main-syntax',
   } = props
 
   const isControlled = 'selectedId' in props
@@ -365,7 +376,7 @@ export default function SyntaxDiagram(props: Props) {
         onTouchStart={handleLeave}
         onTouchMove={handleLeave}
       >
-        <Diagram>
+        <Diagram layoutType={layoutType}>
           <span ref={rootSpanRef}>
             {tokens.map((component, index) => (
               <SyntaxToken key={index} token={component} editable={false} />
@@ -374,7 +385,7 @@ export default function SyntaxDiagram(props: Props) {
           {popOutElement}
         </Diagram>
         {showSyntaxTree && (
-          <Menu>
+          <Menu layoutType={layoutType}>
             {menuItems.map((item, index) => (
               <MenuRow
                 key={index}
@@ -396,7 +407,9 @@ export default function SyntaxDiagram(props: Props) {
             ))}
           </Menu>
         )}
-        {!showSyntaxTree && children && <Menu>{children}</Menu>}
+        {!showSyntaxTree && children && (
+          <Menu layoutType={layoutType}>{children}</Menu>
+        )}
       </Container>
     </SyntaxTokenContext.Provider>
   )

@@ -9,6 +9,15 @@ const Container = styled.div({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  overflow: 'hidden',
+})
+
+const Inner = styled.div({
+  flex: '1 1 auto',
+  maxWidth: '900px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
 })
 
 function getProps(
@@ -27,7 +36,9 @@ export default function BoxModelDiagramPage() {
 
   return (
     <Container>
-      <BoxModelDiagram popOut={false} declarations={declarations} />
+      <Inner>
+        <BoxModelDiagram popOut={false} declarations={declarations} />
+      </Inner>
     </Container>
   )
 }
