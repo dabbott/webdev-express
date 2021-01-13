@@ -1,13 +1,176 @@
 ## Combinators
 
+We can combine CSS selectors using **combinators**. These are analogous to operators, like `+` or `-`, in other programming languages.
+
 ### Descendant combinator
 
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      main p {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Welcome!</p>
+    <main>
+      <p>I'm in main</p>
+      <section>
+        <p>I'm nested in a section in main</p>
+      </section>
+    </main>
+  </body>
+</html>`,
+  }}
+/>
+
 ### Child combinator
+
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      main > p {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Welcome!</p>
+    <main>
+      <p>I'm in main</p>
+      <section>
+        <p>I'm nested in a section in main</p>
+      </section>
+    </main>
+  </body>
+</html>`,
+  }}
+/>
 
 ## Pseudo-classes
 
 These represent either element state or location in the document.
 
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      p:hover {
+        color: blue;
+      }
+      p:active {
+        color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Try clicking me!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+If we use margins for spacing in lists, it's common to remove the margin from the last element.
+
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      ol {
+        padding: 30px;
+        background-color: lightgreen;
+        list-style-position: inside;
+      }
+      li {
+        margin-bottom: 30px;
+      }
+      li:last-child {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <ol>
+      <li>Apples</li>
+      <li>Cherries</li>
+      <li>Oranges</li>
+      <li>Peaches</li>
+      <li>Pears</li>
+    </ol>
+  </body>
+</html>`,
+  }}
+/>
+
 ## Pseudo-elements
 
-## Attributes
+We can insert a new HTML element in our UI using the CSS `::before` and `::after` pseudo-elements. These are often used for adding decorations around other elements.
+
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      blockquote {
+        font-size: 24px;
+        line-height: 1.5;
+        margin: 1rem;
+        font-family: sans-serif;
+      }
+      blockquote::before {
+        content: '';
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+        position: relative;
+        top: 8px;
+        background: center / contain no-repeat black url('https://webdev.express/static/quotes.png');
+      }
+    </style>
+  </head>
+  <body>
+    <blockquote>A quote!</blockquote>
+  </body>
+</html>`,
+  }}
+/>
+
+<!-- ## Attributes -->

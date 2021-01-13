@@ -225,7 +225,7 @@ blockquote::before {
   vertical-align: middle;
   margin-right: 20px;
   margin-bottom: 10px;
-  background-image: url(./quotes.png);
+  background-image: url('https://webdev.express/static/quotes.png');
 }
 
 @media screen and (max-width: 1200px) {
