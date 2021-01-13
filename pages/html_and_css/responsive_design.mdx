@@ -1,1 +1,44 @@
+## What is responsive design?
+
+Responsive design means making a website adapt to different devices and screen sizes.
+
+By default, many HTML elements automatically resize to fill the width of their parent element, so an HTML page should still be _usable_ regardless of screen size. However, this can sometimes result in awkwardly large or small elements on some screen sizes.
+
 ## Media queries
+
+Media queries are a tool for applying different CSS rules to different screen sizes.
+
+For example, suppose we wanted to use a different image size depending on the size of the screen:
+
+<Example
+  title="CSS Styles"
+  preset="html"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      body {
+        text-align: center;
+      }
+      img {
+        width: 400px;
+        height: 300px;
+      }
+      @media (max-width: 600px) {
+        img {
+          width: 200px;
+          height: 150px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img alt="dog" src="https://picsum.photos/id/237/200/150">
+  </body>
+</html>`,
+  }}
+/>

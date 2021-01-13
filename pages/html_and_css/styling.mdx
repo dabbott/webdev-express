@@ -1,5 +1,9 @@
 ## CSS
 
+CSS, or Cascading Style Sheets, is a language for customizing the styles of HTML elements. CSS lets us "select" which element we want to style, and then apply any number of style properties, such as `font-size` or `background-color`. There are _hundreds_ of properties, but only around 30 or so that we use enough to memorize. Usually a quick Google search for what you're trying to do will bring up the CSS property you need.
+
+To use CSS, we embed a CSS **stylesheet** inside a `<style>` element.
+
 <Example
   title="CSS Styles"
   preset="html"
@@ -29,7 +33,7 @@
 
 ## Syntax
 
-A CSS **stylesheet** may contain any number of rules. Each rule has the following syntax:
+A stylesheet may contain any number of rules. Each rule has the following syntax:
 
 <SyntaxDiagram
   tokens={[
@@ -82,21 +86,140 @@ A CSS **stylesheet** may contain any number of rules. Each rule has the followin
 
 ## Where to put styles
 
-Embedded, external, inline. So far, we've seen embedded.
-
-With both embedded and external styles, all rules are **global**!
+Stylesheets can be embedded, external, or inline. So far, we've seen embedded styles (they're _embedded_ within an HTML page).
 
 ### External styles
 
-Can be reused between HTML files.
+To use an external stylesheet, we link to it using a `<link>` element in the `head`: e.g. `<link rel="stylesheet" href="styles.css">`. This is useful since stylesheets can be reused between HTML files this way.
 
 ### Inline styles
 
-Useful for prototyping and for passing variables to CSS. Hard to maintain.
+With both embedded and external styles, all rules are _global_! Inline styles, on the other hand, are applied to a single HTML element. This can be useful for prototyping and for passing variables to CSS. However, this tends to be verbose and hard to maintain, so we tend not to do it often in production code.
+
+<Example
+  title="Inline style"
+  preset="html"
+  height={300}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>
+    <p style="color: teal; font-size: 28px;">Inline styles!</p>
+  </body>
+</html>`,
+  }}
+/>
 
 ## Selectors
 
-The 3 most common: Tag, id, and class.
+The selector is the part of the rule that lets us choose which HTML element(s) our rule should target.
+
+The 3 most common selectors are: tag, id, and class.
+
+### Tag selector
+
+We use the tag selector to target _every element_ with any given tag name.
+
+In this example, we target every `p` element.
+
+<Example
+  title="Tag selectors"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      p {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <p>World</p>
+    <p>!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+### Class selector
+
+We use the class selector to target every element with a specific `class` attribute. This gives us more granular control than the tag selector, since we can decide which elements the CSS rule should apply to. We can also apply the same class to elements with different tag names.
+
+The class selector has a `.` prefix followed by value of the `class` attribute we want to target.
+
+<Example
+  title="Tag selectors"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      .my-green-text {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="my-green-text">Hello</h1>
+    <p class="my-green-text">World</p>
+    <p>!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+### Id selector
+
+We use the id selector to target one element with a specific `id` attribute. This gives us even more granular control than the class selector. We often want to use this when we know we'll only have one instance of a given element.
+
+The id selector has a `#` prefix followed by the value of the `id` attribute we want to target.
+
+<Example
+  title="Tag selectors"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      #world {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <p id="world">World</p>
+    <p>!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+## Cascading
+
+The **cascade** is the algorithm that browsers use to determine the precedence of declarations when multiple declarations target the same element.
+
+We're allowed to have any number of CSS rules target the same element. For example, consider the element `<p id="my-example" class="my-paragraph">Welcome!</p>`. We might have a selector for `#my-example`, `.my-paragraph`, _and_ `p` all at the same time. We could even have multiple rules with the selector `p`. How will these rules applied to the `p`?
+
+First, if two rules with the same selector exist, whichever comes later in the stylesheet wins. In the following example, we have two rules with a `color` declaration that both use the `p` selector - in this case, the one that comes later in the style tag wins, so the paragraph is green.
 
 <Example
   title="Tag, id, and class selectors"
@@ -112,11 +235,43 @@ The 3 most common: Tag, id, and class.
       p {
         color: red;
       }
+      p {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Welcome!</p>
+  </body>
+</html>`,
+  }}
+/>
+
+## Specificity
+
+In general, more specific rules take precedence over more generic rules.
+
+For ids, classes, and tags: the `#id` selector is the most specific, `.class` is less specific, and `tag` is the most generic. Even if a `.class` element comes later in the file, an `#id` will tag precedence.
+
+<Example
+  title="Tag, id, and class selectors"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      #my-example {
+        color: green;
+      }
       .my-paragraph {
         color: blue;
       }
-      #my-example {
-        color: green;
+      p {
+        color: red;
       }
     </style>
   </head>
@@ -127,12 +282,63 @@ The 3 most common: Tag, id, and class.
   }}
 />
 
-## Cascading
-
-Refers to the precedence of rules when multiple rules target the same element.
-
-## Specificity
-
 ## Targeting multiple elements
 
-Comma-separated selectors
+If we want to reuse the same declarations for multiple selectors, there's shorter syntax to do so. This is common for applying styles to all elements of a certain category, e.g. headings, or for resetting browser-default styles.
+
+<Example
+  title="Targeting multiple elements"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      h1, h2, h3, h4, h5, h6 {
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h3>
+  </body>
+</html>`,
+  }}
+/>
+
+## Using multiple classes
+
+We can apply multiple classes to the same element. This gives us more flexibility to mix-and-match different styles.
+
+<Example
+  title="Using multiple styles"
+  preset="html"
+  height={520}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      .title-font {
+        font-family: sans-serif;
+      }
+      .primary-color {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title-font primary-color">Heading 1</h1>
+    <h2 class="title-font">Heading 2</h2>
+    <h3 class="primary-color">Heading 3</h3>
+  </body>
+</html>`,
+  }}
+/>
