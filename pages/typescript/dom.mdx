@@ -6,13 +6,33 @@ The DOM or "Document Object Model" is an in-memory representation of an HTML pag
 
 We can use TypeScript to read and modify the UI of a webpage using the DOM.
 
+## Accessing elements
+
+We typically use `document.querySelector` or `document.querySelectorAll` to grab a reference to existing elements in our HTML document. We can then modify them using DOM APIs.
+
 <Example
-  title="Setting a style"
-  height={300}
+  title="Script tag"
+  preset="html"
   reloadMode="hard"
-  preset="typescript"
-  panes={['editor', 'player']}
-  code={`document.body.style.backgroundColor = 'teal'`}
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>
+    <button>Change background!</button>
+  </body>
+  <script>
+    const button = document.querySelector('button')\n
+    button.onclick = () => {
+      document.body.style.backgroundColor = 'dodgerblue'
+    }
+  </script>
+</html>`,
+  }}
 />
 
 ## Creating elements

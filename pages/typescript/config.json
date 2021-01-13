@@ -2,9 +2,8 @@
   "order": [
     "type_declarations",
     "type_refinement",
-    "tools",
-    "javascript",
     "dom",
+    "tools",
     "imports_and_exports",
     "events",
     "equality"
