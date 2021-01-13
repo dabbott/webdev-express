@@ -74,6 +74,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
   } else if (slug.includes('box_model_diagram')) {
     title = 'Box Model Diagram'
     content = <Component {...pageProps} />
+  } else if (slug.includes('schedule')) {
+    title = 'Class Schedule'
+    content = <Component {...pageProps} />
   } else {
     const node = findNodeBySlug(guidebook, slug)
 
