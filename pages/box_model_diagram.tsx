@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import React from 'react'
+import { deserialize } from '../utils/serialize'
 import styled from 'styled-components'
 import BoxModelDiagram, { CSSDeclaration } from '../components/BoxModelDiagram'
 import { parseHashStringParameters } from '../utils/url'
@@ -22,22 +23,36 @@ const Inner = styled.div({
 
 function getProps(
   asPath: string
-): { declarations: CSSDeclaration[] } | undefined {
+):
+  | {
+      declarations: CSSDeclaration[]
+      content?: React.ReactNode
+    }
+  | undefined {
   const data = parseHashStringParameters(asPath).data
 
   if (!data) return
 
-  return JSON.parse(data)
+  const parsed = JSON.parse(data)
+
+  return {
+    declarations: parsed.declarations,
+    content: parsed.content ? deserialize(parsed.content) : undefined,
+  }
 }
 
 export default function BoxModelDiagramPage() {
   const router = useRouter()
-  const { declarations = [] } = getProps(router.asPath) || {}
+  const { declarations = [], content } = getProps(router.asPath) || {}
 
   return (
     <Container>
       <Inner>
-        <BoxModelDiagram popOut={false} declarations={declarations} />
+        <BoxModelDiagram
+          popOut={false}
+          declarations={declarations}
+          content={content}
+        />
       </Inner>
     </Container>
   )

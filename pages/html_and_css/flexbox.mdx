@@ -1,52 +1,62 @@
-## Rules
+Flexbox is an alternate layout algorithm we can use.
 
-<Example
-  preset="html"
-  files={{
-    'index.html': `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>My Title</title>
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
-      }
-      .outer {
-        height: 100vh;
-        display: flex;
-        flex-direction: row;
-        /* justify-content: center; */
-        /* align-items: flex-start; */
-        /* flex-wrap: wrap; */
-      }
-      .inner {
-        /* align-self: flex-end */
-        /* flex: 1; */
-        padding: 40px;
-        margin: 10px;
-        font-size: 28px;
-        color: white;
-        background-color: dodgerblue;
-      }
-      .a {
-        flex: 2;
-        /* flex-grow: 1;
-        flex-shrink: 1;
-        flex-basis: 0; */
-      }
-    </style>
-  </head>
-  <body>
-    <div class="outer">
-      <!-- Using multiple classes -->
-      <div class="inner a">A</div>
-      <div class="inner b">B</div>
-      <div class="inner c">C</div>
-    </div>
-  </body>
-</html>`,
-  }}
+## CSS Properties
+
+The first property we need to consider is `flex-direction`, which defines the **main axis** and **cross axis** of our layout. After this, we can use `justify-content` to distribute elements along the main axis, and `align-items` to align elements along the cross axis.
+
+<BoxModelDiagram
+  declarations={[
+    ['display', 'flex'],
+    ['flex-direction', 'column'],
+    ['justify-content', 'flex-start'],
+    ['align-items', 'flex-start'],
+    ['flex-wrap', 'wrap'],
+    ['width', '400px'],
+    ['height', '400px'],
+  ]}
+  content={[
+    <span
+      key={1}
+      style={{
+        minWidth: '100px',
+        minHeight: '100px',
+        color: 'white',
+        background: 'dodgerblue',
+        textAlign: 'center',
+        margin: '4px',
+      }}
+    >
+      Child 1
+    </span>,
+    <span
+      key={2}
+      style={{
+        minWidth: '100px',
+        minHeight: '100px',
+        color: 'white',
+        background: 'dodgerblue',
+        textAlign: 'center',
+        margin: '4px',
+      }}
+    >
+      Child 2
+    </span>,
+    <span
+      key={3}
+      style={{
+        minWidth: '100px',
+        minHeight: '100px',
+        color: 'white',
+        background: 'dodgerblue',
+        textAlign: 'center',
+        margin: '4px',
+      }}
+    >
+      Child 3
+    </span>,
+  ]}
 />
 
-iOS developer cheatsheet: https://dabbott.github.io/webdev-projects/cheatsheets/uistackview-flexbox.html
+## Comparisons with other layout systems
+
+- **UIStackView on iOS**: https://dabbott.github.io/webdev-projects/cheatsheets/uistackview-flexbox.html

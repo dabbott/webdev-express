@@ -91,4 +91,8 @@ In some ways, the `div` is more flexible and easier to style. We can even make i
 
 ## Keyboard Navigation
 
-`tabindex`
+The first place to start when supporting keyboard navigation is making sure we're using semantic elements. Elements like `button` support keyboard navigation out-of-the-box.
+
+If we want to implement custom navigation, we'll usually start with the `tabindex` HTML attribute, which lets us specify that an element is be focusable.
+
+Beyond that, we'll often need to use JavaScript to handle key press events.

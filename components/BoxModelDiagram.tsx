@@ -1,7 +1,6 @@
 /// <reference types="resize-observer-browser" />
 import React, {
   CSSProperties,
-  RefObject,
   useEffect,
   useMemo,
   useRef,
@@ -9,6 +8,7 @@ import React, {
 } from 'react'
 import styled, { useTheme } from 'styled-components'
 import SyntaxDiagram, { Token } from '../components/SyntaxDiagram'
+import { serialize } from '../utils/serialize'
 
 const colors = {
   margin: '#f8cb9c',
@@ -26,6 +26,7 @@ const Preview = styled.div(({ theme }) => ({
 const Box = styled.div<{ value: string }>`
   pointer-events: none;
   box-sizing: content-box;
+  background-color: #ddd;
   ${(props) => props.value};
 `
 
@@ -52,37 +53,95 @@ type MeasuredBox = {
 }
 
 type BoxModelComponent = 'margin' | 'padding' | 'border' | 'content'
+type FlexComponent = 'justify-content' | 'align-items' | 'flex-direction'
 
-function useResizeObserver(ref: RefObject<HTMLDivElement>, f: () => void) {
-  useEffect(() => {
-    let mounted = true
+type Axis = 'row' | 'column'
 
-    let resizeObserver = new ResizeObserver(() => {
-      f()
-    })
+function AnnotatedOverlay({
+  width,
+  height,
+  axis,
+  stroke,
+}: {
+  width: number
+  height: number
+  axis: Axis
+  stroke: string
+}) {
+  const midpoint = {
+    x: width / 2,
+    y: height / 2,
+  }
 
-    if (ref.current) {
-      resizeObserver.observe(ref.current)
-    }
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '100%',
+        pointerEvents: 'none',
+      }}
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <marker
+            id={`arrow-${stroke}`}
+            viewBox="0 0 10 10"
+            refX="5"
+            refY="5"
+            markerWidth="3"
+            markerHeight="3"
+            fill={stroke}
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
 
-    return () => {
-      mounted = false
+        <polyline
+          points={
+            axis === 'column'
+              ? `${midpoint.x},0 ${midpoint.x},${height - 8}`
+              : `0,${midpoint.y} ${width - 8},${midpoint.y}`
+          }
+          fill="none"
+          stroke={stroke}
+          stroke-width="4"
+          // marker-start="url(#arrow)"
+          marker-end={`url(#arrow-${stroke})`}
+        />
+      </svg>
+    </div>
+  )
+}
 
-      if (ref.current) {
-        resizeObserver.unobserve(ref.current)
-      }
-    }
-  }, [])
+type Tooltip = {
+  content: React.ReactNode
+  location: 'N' | 'E' | 'S' | 'W'
+  color?: string
 }
 
 function MeasuredBoxDiagram({
   measuredBox,
   highlight,
   onHighlight,
+  tooltips,
+  axis,
+  crossAxis,
 }: {
   measuredBox: MeasuredBox
-  highlight?: BoxModelComponent
-  onHighlight: (component: BoxModelComponent | undefined) => void
+  highlight?: BoxModelComponent | FlexComponent
+  onHighlight: (
+    component: BoxModelComponent | FlexComponent | undefined
+  ) => void
+  tooltips: Tooltip[]
+  axis?: Axis
+  crossAxis?: Axis
 }) {
   const highlightColors = {
     margin: highlight === 'margin' ? colors.margin : 'transparent',
@@ -102,9 +161,6 @@ function MeasuredBoxDiagram({
   }
 
   const marginStyle: CSSProperties = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
     opacity: 0.7,
     width: 'fit-content',
     borderTop: `${measuredBox.marginTop}px solid ${highlightColors.margin}`,
@@ -128,6 +184,24 @@ function MeasuredBoxDiagram({
     borderBottom: `${measuredBox.paddingBottom}px solid ${highlightColors.padding}`,
     borderLeft: `${measuredBox.paddingLeft}px solid ${highlightColors.padding}`,
   }
+
+  const fullHeight =
+    measuredBox.marginTop +
+    measuredBox.marginBottom +
+    measuredBox.borderTopWidth +
+    measuredBox.borderBottomWidth +
+    measuredBox.paddingTop +
+    measuredBox.paddingBottom +
+    measuredBox.height
+
+  const fullWidth =
+    measuredBox.marginRight +
+    measuredBox.marginLeft +
+    measuredBox.borderRightWidth +
+    measuredBox.borderLeftWidth +
+    measuredBox.paddingRight +
+    measuredBox.paddingLeft +
+    measuredBox.width
 
   const contentStyle: CSSProperties = {
     width:
@@ -161,26 +235,101 @@ function MeasuredBoxDiagram({
     onHighlight(component)
   }
 
-  return (
-    <div
-      style={marginStyle}
-      onMouseMove={handleHighlight.bind(null, 'margin')}
-      onMouseLeave={handleHighlight.bind(null, undefined)}
-    >
+  const theme = useTheme()
+
+  const tooltipElements = tooltips.map((tooltip, i) => {
+    return (
       <div
-        style={borderStyle}
-        onMouseMove={handleHighlight.bind(null, 'border')}
+        key={tooltip.location}
+        style={{
+          position: 'absolute',
+          top:
+            tooltip.location === 'N'
+              ? '0%'
+              : tooltip.location === 'E' || tooltip.location === 'W'
+              ? '50%'
+              : '100%',
+          left:
+            tooltip.location === 'W'
+              ? '0%'
+              : tooltip.location === 'N' || tooltip.location === 'S'
+              ? '50%'
+              : '100%',
+        }}
       >
         <div
-          style={paddingStyle}
-          onMouseMove={handleHighlight.bind(null, 'padding')}
+          style={{
+            position: 'relative',
+            left: '-50%',
+            top: '-17px',
+          }}
         >
           <div
-            style={contentStyle}
-            onMouseMove={handleHighlight.bind(null, 'content')}
-          />
+            style={{
+              ...theme.textStyles.body,
+              // fontWeight: 500,
+              width: 'max-content',
+              background: tooltip.color || theme.colors.text,
+              boxShadow: '0 2px 3px rgba(0,0,0,0.2)',
+              padding: '4px 12px',
+              borderRadius: '2px',
+              color: 'white',
+            }}
+          >
+            {tooltip.content}
+          </div>
         </div>
       </div>
+    )
+  })
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: 'fit-content',
+        height: 'fit-content',
+      }}
+    >
+      <div
+        style={marginStyle}
+        onMouseMove={handleHighlight.bind(null, 'margin')}
+        onMouseLeave={handleHighlight.bind(null, undefined)}
+      >
+        <div
+          style={borderStyle}
+          onMouseMove={handleHighlight.bind(null, 'border')}
+        >
+          <div
+            style={paddingStyle}
+            onMouseMove={handleHighlight.bind(null, 'padding')}
+          >
+            <div
+              style={contentStyle}
+              onMouseMove={handleHighlight.bind(null, 'content')}
+            />
+          </div>
+        </div>
+      </div>
+      {crossAxis && (
+        <AnnotatedOverlay
+          width={fullWidth}
+          height={fullHeight}
+          axis={crossAxis}
+          stroke={'gray'}
+        />
+      )}
+      {axis && (
+        <AnnotatedOverlay
+          width={fullWidth}
+          height={fullHeight}
+          axis={axis}
+          stroke={'black'}
+        />
+      )}
+      {tooltipElements}
     </div>
   )
 }
@@ -188,9 +337,20 @@ function MeasuredBoxDiagram({
 interface Props {
   declarations: CSSDeclaration[]
   popOut?: boolean
+  above?: React.ReactNode
+  below?: React.ReactNode
+  content?: React.ReactNode
+  selector?: string
 }
 
-export default function BoxModelDiagram({ declarations, popOut }: Props) {
+export default function BoxModelDiagram({
+  declarations,
+  popOut,
+  selector = '#my-box',
+  above,
+  below,
+  content,
+}: Props) {
   const tokens: Token[] = useMemo(
     () => [
       {
@@ -199,7 +359,7 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
           {
             id: 'Selector',
             style: { color: '#2e9f74' },
-            value: ['#my-box'],
+            value: [selector],
           },
           ' {\n',
           ...declarations.flatMap(([key, value]) => [
@@ -230,11 +390,9 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
   const [selectedId, setSelectedId] = useState<string | undefined>()
   const [css, setCss] = useState('')
   const targetRef = useRef<HTMLDivElement | null>(null)
-  const [highlight, setHighlight] = useState<BoxModelComponent | undefined>(
-    undefined
-  )
-
-  const boxSizing = css.includes('border-box') ? 'border-box' : 'content-box'
+  const [highlight, setHighlight] = useState<
+    BoxModelComponent | FlexComponent | undefined
+  >(undefined)
 
   useEffect(() => {
     const target = targetRef.current
@@ -245,14 +403,24 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
   }, [css])
 
   const boxRef = useRef<HTMLDivElement | null>(null)
-  const [measuredBox, setMeasuredBox] = useState<MeasuredBox | undefined>()
+  const [computedStyle, setComputedStyle] = useState<
+    CSSStyleDeclaration | undefined
+  >()
 
   function updateMeasurements() {
     if (!boxRef.current) return
 
     const style = window.getComputedStyle(boxRef.current)
 
-    const measured: MeasuredBox = {
+    setComputedStyle(style)
+  }
+
+  const measuredBox: MeasuredBox | undefined = useMemo(() => {
+    const style = computedStyle
+
+    if (!style) return
+
+    return {
       marginTop: parseFloat(style.marginTop),
       marginRight: parseFloat(style.marginRight),
       marginBottom: parseFloat(style.marginBottom),
@@ -270,9 +438,7 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
       boxSizing:
         style.boxSizing === 'border-box' ? 'border-box' : 'content-box',
     }
-
-    setMeasuredBox(measured)
-  }
+  }, [computedStyle])
 
   useEffect(() => {
     updateMeasurements()
@@ -296,6 +462,48 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
 
   const theme = useTheme()
 
+  const tooltips: Tooltip[] = useMemo(() => {
+    if (!computedStyle) return []
+
+    const direction = computedStyle.flexDirection
+
+    if (highlight === 'flex-direction') {
+      return [
+        { location: direction === 'row' ? 'W' : 'N', content: 'Main Axis' },
+        {
+          location: direction === 'row' ? 'N' : 'W',
+          content: 'Cross Axis',
+          color: 'gray',
+        },
+      ]
+    } else if (highlight === 'justify-content') {
+      return [
+        { location: direction === 'row' ? 'W' : 'N', content: 'Start' },
+        { location: direction === 'row' ? 'E' : 'S', content: 'End' },
+      ]
+    } else if (highlight === 'align-items') {
+      return [
+        {
+          location: direction === 'row' ? 'N' : 'W',
+          content: 'Start',
+          color: 'gray',
+        },
+        {
+          location: direction === 'row' ? 'S' : 'E',
+          content: 'End',
+          color: 'gray',
+        },
+      ]
+    } else {
+      return []
+    }
+  }, [computedStyle, highlight])
+
+  // const isFlexComponent =
+  //   highlight === 'flex-direction' ||
+  //   highlight === 'justify-content' ||
+  //   highlight === 'align-items'
+
   return (
     <SyntaxDiagram
       layoutType={'split'}
@@ -304,14 +512,17 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
       popOut={
         popOut === undefined
           ? `/box_model_diagram#data=${encodeURIComponent(
-              JSON.stringify({ declarations })
+              JSON.stringify({
+                declarations,
+                content: content ? serialize(content) : undefined,
+              })
             )}`
           : popOut
       }
       showSyntaxTree={false}
       showToolTips={false}
       onChangeText={(text) => {
-        setCss(text.slice('#my-box {'.length + 2, -1))
+        setCss(text.slice(`${selector} {`.length + 2, -1))
       }}
       onChangeActiveToken={(id) => {
         setSelectedId(id)
@@ -324,13 +535,19 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
           setHighlight('border')
         } else if (id?.includes('width') || id?.includes('height')) {
           setHighlight('content')
+        } else if (id?.includes('align-items')) {
+          setHighlight('align-items')
+        } else if (id?.includes('justify-content')) {
+          setHighlight('justify-content')
+        } else if (id?.includes('flex-direction')) {
+          setHighlight('flex-direction')
         } else {
           setHighlight(undefined)
         }
       }}
     >
       <Preview>
-        Some content above
+        {above || 'Some content above'}
         <div
           style={{
             display: 'flow-root',
@@ -339,8 +556,26 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
         >
           {measuredBox && (
             <MeasuredBoxDiagram
+              tooltips={tooltips}
               highlight={highlight}
               measuredBox={measuredBox}
+              axis={
+                highlight === 'flex-direction' ||
+                highlight === 'justify-content'
+                  ? !computedStyle
+                    ? undefined
+                    : (computedStyle.flexDirection as Axis)
+                  : undefined
+              }
+              crossAxis={
+                highlight === 'flex-direction' || highlight === 'align-items'
+                  ? !computedStyle
+                    ? undefined
+                    : computedStyle.flexDirection === 'row'
+                    ? 'column'
+                    : 'row'
+                  : undefined
+              }
               onHighlight={(highlight) => {
                 setHighlight(highlight)
                 setSelectedId(highlight)
@@ -348,10 +583,15 @@ export default function BoxModelDiagram({ declarations, popOut }: Props) {
             />
           )}
           <Box ref={boxRef} value={css}>
-            A div with <code style={theme.textStyles.code}>id="my-box"</code>
+            {content || (
+              <>
+                A div with{' '}
+                <code style={theme.textStyles.code}>id="my-box"</code>
+              </>
+            )}
           </Box>
         </div>
-        Some content below
+        {below || 'Some content below'}
       </Preview>
     </SyntaxDiagram>
   )

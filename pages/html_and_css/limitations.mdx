@@ -1,0 +1,15 @@
+## HTML
+
+A few challenges we typically encounter when using HTML directly:
+
+- **Reusability**: while there are some ways we can reuse HTML snippets, such as template tags and web components, they typically rely heavily on JavaScript, and even then are somewhat cumbersome to use directly.
+- **Browser differences**: since different browsers may implement the web standards at different times or have different bugs, we need to double check whether we can use newer features (see https://caniuse.com/) and test on multiple platforms
+- **Screen reader differences**: just like how browsers have differences, so do screen readers. We similarly need to test with multiple screenreaders (see https://webaim.org/projects/screenreadersurvey8/ for which to test with)
+
+## CSS
+
+A few challenges we typically encounter when using CSS directly:
+
+- **Encapsulation**: Since CSS is global, we need to enforce naming conventions across our team (e.g. http://getbem.com/introduction/). Otherwise, our CSS files can quickly grow in size and complexity until it's practically impossible to make changes without breaking something.
+- **Vendor prefixing**: If we want to use newer CSS features, we need to add browser-specific features to property names. This is a hassle to do manually (fortunately there are tools that can do this automatically)
+- **CSS Resets**: Often we want our website to look the same on different browsers. This means we'll want to "reset" each browser's default styles to something standard. A few common options: https://meyerweb.com/eric/tools/css/reset/, https://necolas.github.io/normalize.css/.
