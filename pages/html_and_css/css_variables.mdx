@@ -1,0 +1,133 @@
+---
+title: CSS Variables
+---
+
+All modern browsers support CSS **custom properties**, also known as CSS variables.
+
+## Declaring variables
+
+All variables must be declared in a CSS rule, i.e. within curly braces.
+
+To declare a top-level variable that can be used anywhere, we typically use the `:root` pseudo-class. In an HTML page, this refers to the HTML element.
+
+Any CSS value can be stored in a variable: sizes (with units), colors, shorthand properties (e.g. `1px solid blue` for a border), etc.
+
+<Example
+  title="Declaring root variables"
+  preset="html"
+  height={400}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      :root {
+        --primary-color: dodgerblue;
+      }
+      h1 {
+        color: var(--primary-color);
+      }
+      button {
+        color: white;
+        background-color: var(--primary-color);
+        border: none;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <button>Hello, world!</button>
+  </body>
+</html>`,
+  }}
+/>
+
+## Shadowing variables
+
+Any CSS rule can redeclare a variable to a different value. An HTML element will use the variable declared on the nearest ancestor.
+
+<Example
+  title="Shadowing variables"
+  preset="html"
+  height={400}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      :root {
+        --primary-color: dodgerblue;
+      }
+      section {
+        --primary-color: teal;
+      }
+      h1 {
+        color: var(--primary-color);
+      }
+      button {
+        color: white;
+        background-color: var(--primary-color);
+        border: none;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <button>Hello, world!</button>
+    <section>
+      <h1>Hello, world!</h1>
+      <button>Hello, world!</button>
+    </section>
+  </body>
+</html>`,
+  }}
+/>
+
+## Fallback values
+
+We can also provide a fallback value when using `var`, in case our variable isn't defined.
+
+In this example, we don't declare a `--primary-color` in the root. This means that our `h1` and `button` outside of the `section` will use the fallback value, since `--primary-color` isn't defined.
+
+<Example
+  title="Shadowing variables"
+  preset="html"
+  height={400}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      section {
+        --primary-color: teal;
+      }
+      h1 {
+        color: var(--primary-color, dodgerblue);
+      }
+      button {
+        color: white;
+        background-color: var(--primary-color, darkorange);
+        border: none;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <button>Hello, world!</button>
+    <section>
+      <h1>Hello, world!</h1>
+      <button>Hello, world!</button>
+    </section>
+  </body>
+</html>`,
+  }}
+/>

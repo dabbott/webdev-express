@@ -15,7 +15,7 @@ const Container = styled.div({
   alignItems: 'stretch',
   justifyContent: 'center',
   overflow: 'hidden',
-  padding: '40px 40px',
+  padding: '100px 40px',
   background: `linear-gradient(135deg, #607d8b, #251542)`,
 })
 
@@ -26,6 +26,7 @@ const Inner = styled.div({
   display: 'flex',
   alignItems: 'stretch',
   justifyContent: 'center',
+  flexDirection: 'column',
 })
 
 const Title = styled.h1(({ theme }) => ({
@@ -46,20 +47,28 @@ const Title = styled.h1(({ theme }) => ({
 
 const Section = styled.section(({ theme }) => ({
   flex: '1 1 0',
-  padding: '40px',
+  padding: '30px 40px',
   background: 'white',
-  borderRadius: '40px',
+  borderRadius: '4px',
   // border: `1px solid ${theme.colors.textDecorativeLight}`,
   boxShadow: '0 2px 8px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.1)',
   // width: '33%',
 }))
 
-const StyledHeading = styled(Heading3)({
-  marginBottom: 0,
-  marginTop: '16px',
+const StyledUnorderedList = styled(UnorderedList)({
+  paddingLeft: '30px',
 })
 
-const StyledList = styled(List)({
+const StyledHeading = styled(Heading3)({
+  marginBottom: '6px',
+  marginTop: '16px',
+  background: 'rgba(0,0,0,0.05)',
+  display: 'inline-block',
+  padding: '0 10px',
+  borderRadius: '2px',
+})
+
+const ListItem = styled(List)({
   fontSize: '1.1rem',
 })
 
@@ -81,7 +90,7 @@ export default function BoxModelDiagramPage() {
           style={{
             flex: '1 1 0',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
           }}
         >
           <Section>
@@ -89,27 +98,27 @@ export default function BoxModelDiagramPage() {
             <Row>
               <Chunk>
                 <StyledHeading>Day 1</StyledHeading>
-                <UnorderedList>
-                  <StyledList>Elements</StyledList>
-                  <StyledList>Styling</StyledList>
-                  <StyledList>Box Model</StyledList>
-                  <StyledList>Browser Dev Tools</StyledList>
-                </UnorderedList>
+                <StyledUnorderedList>
+                  <ListItem>Elements</ListItem>
+                  <ListItem>Styling</ListItem>
+                  <ListItem>Box Model</ListItem>
+                  <ListItem>Browser Dev Tools</ListItem>
+                </StyledUnorderedList>
               </Chunk>
               <Chunk>
                 <StyledHeading>Day 2</StyledHeading>
-                <UnorderedList>
-                  <StyledList>Flexbox</StyledList>
-                  <StyledList>Advanced Selectors</StyledList>
-                  <StyledList>Units</StyledList>
-                  <StyledList>Responsive Design</StyledList>
-                  <StyledList>Accessibility</StyledList>
-                  <StyledList>Limitations</StyledList>
-                </UnorderedList>
+                <StyledUnorderedList>
+                  <ListItem>Flexbox</ListItem>
+                  <ListItem>Advanced Selectors</ListItem>
+                  <ListItem>Units</ListItem>
+                  <ListItem>Responsive Design</ListItem>
+                  <ListItem>Accessibility</ListItem>
+                  <ListItem>Limitations</ListItem>
+                </StyledUnorderedList>
               </Chunk>
             </Row>
           </Section>
-          <VerticalSpacer size={40} />
+          <HorizontalSpacer size={40} />
           <Section>
             <Title
               style={{
@@ -121,26 +130,26 @@ export default function BoxModelDiagramPage() {
             <Row>
               <Chunk>
                 <StyledHeading>Day 3</StyledHeading>
-                <UnorderedList>
-                  <StyledList>TypeScript Overview</StyledList>
-                  <StyledList>Type Declarations</StyledList>
-                  <StyledList>Type Refinement</StyledList>
-                  <StyledList>DOM</StyledList>
-                </UnorderedList>
+                <StyledUnorderedList>
+                  <ListItem>TypeScript Overview</ListItem>
+                  <ListItem>Type Declarations</ListItem>
+                  <ListItem>Type Refinement</ListItem>
+                  <ListItem>DOM</ListItem>
+                </StyledUnorderedList>
               </Chunk>
               <Chunk>
                 <StyledHeading>Day 4</StyledHeading>
-                <UnorderedList>
-                  <StyledList>Tools</StyledList>
-                  <StyledList>Imports and Exports</StyledList>
-                  <StyledList>Events</StyledList>
-                  <StyledList>Equality</StyledList>
-                </UnorderedList>
+                <StyledUnorderedList>
+                  <ListItem>Tools</ListItem>
+                  <ListItem>Imports and Exports</ListItem>
+                  <ListItem>Events</ListItem>
+                  <ListItem>Equality</ListItem>
+                </StyledUnorderedList>
               </Chunk>
             </Row>
           </Section>
         </div>
-        <HorizontalSpacer size={40} />
+        <VerticalSpacer size={40} />
         <Section>
           <Title
             style={{
@@ -149,37 +158,47 @@ export default function BoxModelDiagramPage() {
           >
             {'Day 5-8: React'}
           </Title>
-          <StyledHeading>Day 5 - Fundamentals</StyledHeading>
-          <UnorderedList>
-            <StyledList>{'JSX, Elements & Components'}</StyledList>
-            <StyledList>{'Props & Children'}</StyledList>
-            <StyledList>Styling</StyledList>
-            <StyledList>Conditional Rendering</StyledList>
-            <StyledList>{'Lists & Keys'}</StyledList>
-          </UnorderedList>
-          <StyledHeading>Day 6 - Hooks</StyledHeading>
-          <UnorderedList>
-            <StyledList>Hooks</StyledList>
-            <StyledList>Rules of hooks</StyledList>
-            <StyledList>Built-in hooks</StyledList>
-            <StyledList>Custom hooks</StyledList>
-          </UnorderedList>
-          <StyledHeading>Day 7 - Data</StyledHeading>
-          <UnorderedList>
-            <StyledList>XHR</StyledList>
-            <StyledList>Promises</StyledList>
-            <StyledList>Async/Await</StyledList>
-            <StyledList>Suspense</StyledList>
-            <StyledList>Working with Contexts</StyledList>
-          </UnorderedList>
-          <StyledHeading>Day 8 - Production-readiness</StyledHeading>
-          <UnorderedList>
-            <StyledList>Performance</StyledList>
-            <StyledList>Devtools</StyledList>
-            <StyledList>Lifecycle</StyledList>
-            <StyledList>Patterns</StyledList>
-            <StyledList>Testing</StyledList>
-          </UnorderedList>
+          <Row>
+            <Chunk>
+              <StyledHeading>Day 5 - Fundamentals</StyledHeading>
+              <StyledUnorderedList>
+                <ListItem>{'JSX, Elements & Components'}</ListItem>
+                <ListItem>{'Props & Children'}</ListItem>
+                <ListItem>Styling</ListItem>
+                <ListItem>Conditional Rendering</ListItem>
+                <ListItem>{'Lists & Keys'}</ListItem>
+              </StyledUnorderedList>
+            </Chunk>
+            <Chunk>
+              <StyledHeading>Day 6 - Hooks</StyledHeading>
+              <StyledUnorderedList>
+                <ListItem>Hooks</ListItem>
+                <ListItem>Rules of hooks</ListItem>
+                <ListItem>Built-in hooks</ListItem>
+                <ListItem>Custom hooks</ListItem>
+              </StyledUnorderedList>
+            </Chunk>
+            <Chunk>
+              <StyledHeading>Day 7 - Data</StyledHeading>
+              <StyledUnorderedList>
+                <ListItem>XHR</ListItem>
+                <ListItem>Promises</ListItem>
+                <ListItem>Async/Await</ListItem>
+                <ListItem>Suspense</ListItem>
+                <ListItem>Working with Contexts</ListItem>
+              </StyledUnorderedList>
+            </Chunk>
+            <Chunk>
+              <StyledHeading>Day 8 - Production-readiness</StyledHeading>
+              <StyledUnorderedList>
+                <ListItem>Performance</ListItem>
+                <ListItem>Devtools</ListItem>
+                <ListItem>Lifecycle</ListItem>
+                <ListItem>Patterns</ListItem>
+                <ListItem>Testing</ListItem>
+              </StyledUnorderedList>
+            </Chunk>
+          </Row>
         </Section>
       </Inner>
     </Container>
