@@ -69,72 +69,102 @@ console.log(myObject)`}
 
 ## Classes
 
-These are about the same as Swift, syntax and semantics
+These are about the same as Swift in terms of both syntax and semantics.
 
 ## Interfaces
 
-These are about the same as protocols
+These are about the same as Swift protocols.
 
-```ts
-interface F {
+Note that when defining objects, `type` and `interface` are almost interchangeable - https://microsoft.github.io/TypeScript-New-Handbook/everything/#interface-vs-alias. Using one or the other mostly comes down to personal preference and whatever pattern has been established in the codebase.
+
+<Example
+  title="Struct-like objects"
+  preset="typescript"
+  width={0}
+  code={`interface MyInterface {
   foo: string
   bar(n: number): number
-}
-```
+}\n
+let o: MyInterface = {
+  foo: 'hello',
+  bar: () => 42
+}`}
+/>
 
-- Keywords `type` and `interface` are almost interchangeable - https://microsoft.github.io/TypeScript-New-Handbook/everything/#interface-vs-alias
+TypeScript doesn't support default implementations or protocol extensions (without very non-ideomatic prototype extension).
 
 ## Unions
 
-```ts
-type U = string | number | 42 | { foo: string } | { baz: 123 }
+We're allowed to make unions out of any types.
 
-function doSomething(arg: U) {
-  if (typeof arg === 'string') {
-    arg
-  } else if (typeof arg === 'number') {
-    arg
-  } else if ('foo' in arg) {
-    arg.foo
-  } else {
-    arg.baz
+<Example
+  title="Unions of constant types"
+  preset="typescript"
+  width={0}
+  code={`type MyUnion = 'apple' | 'cherry' | 'orange' | 'peach' | 'pear'\n
+let m: MyUnion = 'apple'`}
+/>
+
+### Discriminated Unions
+
+These are analogous to Swift's enums with associated data.
+
+Note that we typically use the property `type` as the "discriminant", but we can use any arbitrary type.
+
+<Example
+  title="Unions of constant types"
+  preset="typescript"
+  width={0}
+  code={`type MyUnion =
+  | { type: 'mouseEvent'; button: 'left' | 'right' }
+  | { type: 'touchEvent'; numberOfTouches: number }
+  | { type: 'keyboardEvent'; key: string }\n
+function handleEvent(event: MyUnion) {
+  switch (event.type) {
+    case 'mouseEvent':
+      console.log(event.button)
+      break
+    case 'touchEvent':
+      console.log(event.numberOfTouches)
+      break
+    case 'keyboardEvent':
+      console.log(event.key)
+      break
   }
-}
+}\n
+handleEvent({ type: 'mouseEvent', button: 'right' })`}
+/>
 
-doSomething('hi')
-```
+### Enums
 
-### There are enums, but unions are typically more common.
+TypeScript supports enums, but unions are much more common:
 
 - Enums can't have associated data
-- Converting to/from enum is more of a hassle
+- Enums can't have methods or static members
+- Converting to/from an enum is a hassle
 
-### Discriminating Unions
-
-```ts
-type U = { type: 'a'; foo: string } | { type: 'b'; baz: 123 }
-
-function doSomething(arg: U) {
-  // TypeScript figures out arg.type is union
-  switch (arg.type) {
-    case 'a':
-      arg
-      break
-    case 'b':
-      arg
-      break
-  }
-}
-
-doSomething({ type: 'a', foo: 'bar' })
-```
+<Example
+  title="Enums"
+  preset="typescript"
+  width={0}
+  code={`enum MyEnum {
+  foo = 'foo',
+  bar = 'bar'
+}\n
+// Not allowed!
+// let e: MyEnum = 'foo'`}
+/>
 
 ## Intersection types
 
-This works both with object types and interfaces
+This works both with object types and interfaces.
 
-```ts
-type A = { foo: string }
+<Example
+  title="Intersection types"
+  preset="typescript"
+  width={0}
+  code={`type A = { foo: string }
 type B = { bar: number }
-type C = A & B
-```
+type C = A & B\n
+let c = { foo: "hello", bar: 42 }`}
+/>

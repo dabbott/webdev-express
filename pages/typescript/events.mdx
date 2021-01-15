@@ -1,0 +1,118 @@
+## Event loop
+
+The event loop is queue of functions. When a program starts, the engine evaluates all JavaScript code. Then the engine goes "idle" until new "events" (functions) are added to the event loop. New events may be inserted into the event loop at any time, either by our code or the JavaScript environment (usually in response to I/O), which are then executed in sequence. We use callback functions to perform actions as a result of events.
+
+## setTimeout
+
+To set a one-off timer, we use `setTimeout`.
+
+<Example
+  title="setTimeout"
+  preset="html"
+  reloadMode="hard"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>Waiting...</body>
+  <script>
+    setTimeout(() => {
+      document.body.innerHTML += 'Called!'
+    }, 2000)
+  </script>
+</html>`,
+  }}
+/>
+
+## setInterval
+
+To set a repeating timer, we use `setInterval`.
+
+<Example
+  title="setInterval"
+  preset="html"
+  reloadMode="hard"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+  </head>
+  <body>Waiting...</body>
+  <script>
+    setInterval(() => {
+      document.body.innerHTML += 'Called!'
+    }, 2000)
+  </script>
+</html>`,
+  }}
+/>
+
+## Click events
+
+Events bubble up from inner to outer elements. We can prevent this by calling `event.stopPropagation()`.
+
+If we want to add multiple events, we can use `element.addEventListener` instead of assigning directly to the event handler, e.g. `outer.addEventListener('click', () => { ... })`.
+
+Most global events can be assigned to the `document` object.
+
+<Example
+  title="Click events"
+  preset="html"
+  reloadMode="hard"
+  height={500}
+  files={{
+    'index.html': `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My page</title>
+    <style>
+      .outer {
+        padding: 40px;
+        background-color: skyblue;
+      }
+      .inner {
+        padding: 40px;
+        background-color: steelblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer">
+      <div class="inner"></div>
+    </div>
+  </body>
+  <script>
+    const outer = document.querySelector(".outer");
+    const inner = document.querySelector(".inner");\n
+    outer.onclick = (event) => {
+      append('outer', 'skyblue')
+    };\n
+    inner.onclick = (event) => {
+      append('inner', 'steelblue')
+    };\n
+    function append(text, color) {
+      const el = document.createElement('div')
+      el.innerText = text
+      el.style.color = color
+      document.body.append(el)
+    }
+  </script>
+</html>`,
+  }}
+/>
+
+## Capture and bubble phases
+
+![Event phase diagram](https://d259t2jj6zp7qm.cloudfront.net/images/c_scale%2Cw_300-capture-bubble_nbgmry.png)
+
+> From: https://developer.salesforce.com/blogs/developer-relations/2017/08/depth-look-lightning-component-events.html
+
+The third parameter to `addEventListener` can bind events to the capture phase, e.g. `outer.addEventListener('click', () => { ... }, true)`.

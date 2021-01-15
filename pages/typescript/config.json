@@ -3,9 +3,9 @@
     "type_declarations",
     "type_refinement",
     "dom",
-    "tools",
     "imports_and_exports",
     "events",
-    "equality"
+    "equality",
+    "tools"
   ]
 }
