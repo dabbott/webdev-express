@@ -1,3 +1,5 @@
+## Completed Example
+
 <iframe
   src={
     'https://codesandbox.io/embed/drawing-updated-cdvjd?fontsize=14&hidenavigation=1&theme=light&view=preview'
@@ -9,7 +11,7 @@
     borderRadius: ' 4px',
     overflow: 'hidden',
   }}
-  title={'TypeScript Todo List'}
+  title={'Drawing App'}
   allow={
     'accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking'
   }
@@ -17,3 +19,43 @@
     'allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts'
   }
 />
+
+## Steps
+
+Starting from the starter code...
+
+1. Refactor our path drawing code by extracting out a separate function to create a path:
+
+   ```ts
+   function convertToPath(shape: Shape): Path2D {
+     const path = new Path2D()
+
+     // ...
+
+     return path
+   }
+   ```
+
+   After this, use `context.fill(path)` and `context.stroke(path)` to draw the path.
+
+2. Implement the pencil tool.
+
+3. Add one or more of the following features:
+
+   - **Keyboard Shortcuts**
+
+     Pressing "r" should activate the rectangle tool, "o" should activate ellipse, and "p" or "v" should activate pencil.
+
+     > Hint: use the `onkeypress` event, and set the `checked` property of the input elements
+
+   - **Eraser Tool**
+
+     When the eraser tool is active, dragging should remove any shape under the mouse.
+
+     > Hint: use the canvas APIs `context.isPointInPath` and `context.isPointInStroke` to determine the shape under the mouse
+
+   - **Move Tool (hardest)**
+
+     When the move tool is active, dragging should move the top shape under the mouse.
+
+     > Hint: use the canvas APIs `context.isPointInPath` and `context.isPointInStroke` to determine the shape under the mouse
