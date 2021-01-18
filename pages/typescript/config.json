@@ -6,6 +6,8 @@
     "imports_and_exports",
     "events",
     "equality",
+    "immutability",
+    "context",
     "tools"
   ]
 }
