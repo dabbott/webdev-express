@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import ReactGA from 'react-ga'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import { ThemeProvider } from 'styled-components'
 import type { AppProps } from 'next/app'
@@ -117,6 +117,19 @@ export default function App({ Component, pageProps, router }: AppProps) {
     }
   }
 
+  const { pathname, asPath: clientPath } = router
+
+  const customRouter = useMemo(
+    () => ({
+      pathname,
+      clientPath,
+      push: (pathname: string) => {
+        router.push(pathname)
+      },
+    }),
+    [pathname, clientPath]
+  )
+
   return (
     <>
       <Head>
@@ -126,7 +139,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
           pageDescription: description,
         })}
       </Head>
-      <RouterProvider value={router}>
+      <RouterProvider value={customRouter}>
         <LinkProvider value={LinkComponent}>
           <Styles.Reset />
           <Styles.Main />

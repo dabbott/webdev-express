@@ -1,16 +1,7 @@
-import { useRouter } from 'next/router'
 import React from 'react'
+import { parseQueryParameters, parseUrl, useRouter } from 'react-guidebook'
 import styled from 'styled-components'
 import SyntaxDiagram, { Token } from '../components/SyntaxDiagram'
-import { parseHashStringParameters } from '../utils/url'
-
-function getTokens(asPath: string): Token[] | undefined {
-  const data = parseHashStringParameters(asPath).data
-
-  if (!data) return
-
-  return JSON.parse(data).tokens
-}
 
 const Container = styled.div({
   height: '100vh',
@@ -20,9 +11,18 @@ const Container = styled.div({
   overflow: 'hidden',
 })
 
+function getTokens(fragment: string): Token[] | undefined {
+  const data = parseQueryParameters(fragment).data
+
+  if (!data) return
+
+  return JSON.parse(data).tokens
+}
+
 export default function SyntaxDiagramPage() {
   const router = useRouter()
-  const tokens = getTokens(router.asPath) || []
+  const { fragment } = parseUrl(router.clientPath)
+  const tokens = getTokens(fragment) || []
 
   return (
     <Container>

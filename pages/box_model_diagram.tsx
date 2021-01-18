@@ -1,9 +1,8 @@
-import { useRouter } from 'next/router'
 import React from 'react'
 import { deserialize } from '../utils/serialize'
 import styled from 'styled-components'
 import BoxModelDiagram, { CSSDeclaration } from '../components/BoxModelDiagram'
-import { parseHashStringParameters } from '../utils/url'
+import { parseQueryParameters, parseUrl, useRouter } from 'react-guidebook'
 
 const Container = styled.div({
   height: '100vh',
@@ -22,14 +21,14 @@ const Inner = styled.div({
 })
 
 function getProps(
-  asPath: string
+  fragment: string
 ):
   | {
       declarations: CSSDeclaration[]
       content?: React.ReactNode
     }
   | undefined {
-  const data = parseHashStringParameters(asPath).data
+  const data = parseQueryParameters(fragment).data
 
   if (!data) return
 
@@ -43,7 +42,8 @@ function getProps(
 
 export default function BoxModelDiagramPage() {
   const router = useRouter()
-  const { declarations = [], content } = getProps(router.asPath) || {}
+  const { fragment } = parseUrl(router.clientPath)
+  const { declarations = [], content } = getProps(fragment) || {}
 
   return (
     <Container>
