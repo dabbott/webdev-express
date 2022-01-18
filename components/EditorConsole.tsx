@@ -146,6 +146,7 @@ export default memo(
                     const type = getPaneType(pane)
 
                     return {
+                      // @ts-ignore
                       id: `${type}-${index}`,
                       title: paneNames[type] || type,
                       ...(typeof pane === 'string' ? { type } : pane),
